@@ -26,6 +26,9 @@ module.exports = {
                 'card-secondary-bg': '#f9fafa',
                 'card-tertiary-color': '#64707d',
             },
+            boxShadow: {
+                'card': '0 0 0 1px rgba(8, 9, 10, 0.05)'
+            },
         },
     },
     variants: {

@@ -1,28 +1,41 @@
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime'
 import React from 'react';
 import Layout from '../components/Layout';
 import StatGrid from '../components/statGrid';
+import IArticle from '../interfaces/IArticle';
+import IAzureArticleData from '../interfaces/IAzureArticleData';
 import IFollower from '../interfaces/IFollower';
 import IOverviewStat from '../interfaces/IOverviewStat';
 import IUser from '../interfaces/IUser';
 import { getAzureData } from '../lib/azure';
 import { getArticles, getFollowers, getUser } from '../lib/devto';
+import { getCombinedArticleViewsReactionsComments, getHistoricalDataForOverview, getLatestPublishedArticle } from '../lib/utils/articles';
+
+// Add .fromNow (relative times)
+dayjs.extend(relativeTime)
 
 interface IProps {
-    items: any[];
-    latestArticles: any[];
+    azureArticleData: IAzureArticleData[];
+    latestArticles: IArticle[];
     user: IUser;
     followers: IFollower[];
 }
 
-const IndexPage = ({ items, latestArticles, user, followers }: IProps) => {
-    const data = [...items, { articles: latestArticles }].map((item) => {
-        const views = item.articles.reduce((count: number, article: { page_views_count: number }) => article.page_views_count + count, 0);
-        const reactions = item.articles.reduce((count: number, article: { public_reactions_count: number }) => article.public_reactions_count + count, 0);
-        const comments = item.articles.reduce((count: number, article: { comments_count: number }) => article.comments_count + count, 0);
+const IndexPage = ({ azureArticleData, latestArticles, user, followers }: IProps) => {
+    const lastestArticlesAsAzureData: IAzureArticleData = {
+        fetchedAt: '',
+        count: 1,
+        articles: latestArticles,
+    };
+
+    const data = [...azureArticleData, lastestArticlesAsAzureData].map((item) => {
+        const views = item.articles.reduce((count: number, article: IArticle) => article.pageViewsCount + count, 0);
+        const reactions = item.articles.reduce((count: number, article: IArticle) => article.publicReactionsCount + count, 0);
+        const comments = item.articles.reduce((count: number, article: IArticle) => article.commentsCount + count, 0);
 
         return {
-            name: item.fetchedAt ? dayjs(item.fetchedAt).format('HH:mm') : dayjs().format('HH:mm'),
+            name: dayjs(item.fetchedAt).format('HH:mm'),
             views,
             viewsDiff: 0,
             reactions,
@@ -38,11 +51,16 @@ const IndexPage = ({ items, latestArticles, user, followers }: IProps) => {
         data[i].reactionsDiff = item.reactions - prevItem.reactions;
     }
 
+    const now = getCombinedArticleViewsReactionsComments(latestArticles);
+    const { day, week, month } = getHistoricalDataForOverview(azureArticleData, latestArticles);
+
+    const latestArticle = getLatestPublishedArticle(latestArticles);
+
     const mockStats: IOverviewStat[] = [
-        { name: 'Total post reactions', value: data[data.length-1].reactions },
-        { name: 'Total post views', value: data[data.length-1].views },
-        { name: 'Followers', value: followers.length },
-        { name: 'Total comments', value: data[data.length-1].comments },
+        { name: 'Total post reactions', value: now.reactions, weekly: week.reactions, monthly: month.reactions },
+        { name: 'Total post views', value: now.views, daily: day.views, weekly: week.views },
+        { name: 'Followers', value: followers.length, weekly: 43, monthly: 112 },
+        { name: 'Posts published', value: now.publishedPosts, otherStats: [{ value: dayjs(latestArticle.publishedAt).fromNow(), desc: 'Last posted' }, { value: `${month.publishedPosts}`, desc: 'Last 30 days' }] },
     ]
 
 
@@ -57,15 +75,15 @@ const IndexPage = ({ items, latestArticles, user, followers }: IProps) => {
     )
 }
 
-export async function getServerSideProps() {
-    const azureItems = await getAzureData();
-    const latestArticles = await getArticles();
-    const followers = await getFollowers();
-    const user = await getUser();
+export async function getServerSideProps(): Promise<{ props: IProps }> {
+    const azureArticleData: IAzureArticleData[] = await getAzureData();
+    const latestArticles: IArticle[] = await getArticles();
+    const followers: IFollower[] = await getFollowers();
+    const user: IUser = await getUser();
 
     return {
         props: {
-            items: azureItems,
+            azureArticleData,
             latestArticles,
             followers,
             user,

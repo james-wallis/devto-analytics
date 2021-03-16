@@ -39,7 +39,7 @@ const Header = ({ user }: IProps) => (
                     <FiHelpCircle className="text-2xl text-ghost"/>
                 </a>
                 <a
-                    href="https://github.com/james-wallis"
+                    href="https://github.com/james-wallis/devto-analytics"
                     className="mx-1 p-2 rounded-full hover:bg-ghost-light-hover transition-colors"
                     target="_blank"
                     rel="noreferrer noopener"

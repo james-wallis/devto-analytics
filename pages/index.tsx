@@ -5,12 +5,14 @@ import Layout from '../components/Layout';
 import StatGrid from '../components/statGrid';
 import IArticle from '../interfaces/IArticle';
 import IAzureArticleData from '../interfaces/IAzureArticleData';
+import IAzureFollowerData from '../interfaces/IAzureFollowerData';
 import IFollower from '../interfaces/IFollower';
 import IOverviewStat from '../interfaces/IOverviewStat';
 import IUser from '../interfaces/IUser';
-import { getAzureData } from '../lib/azure';
+import { getAzureArticleData, getAzureFollowerData } from '../lib/azure';
 import { getArticles, getFollowers, getUser } from '../lib/devto';
-import { getCombinedArticleViewsReactionsComments, getHistoricalDataForOverview, getLatestPublishedArticle } from '../lib/utils/articles';
+import { getCombinedArticleViewsReactionsComments, getHistoricalArticleDataForOverview, getLatestPublishedArticle } from '../lib/utils/articles';
+import { getHistoricalFollowerDataForOverview } from '../lib/utils/followers';
 
 // Add .fromNow (relative times)
 dayjs.extend(relativeTime)
@@ -18,11 +20,12 @@ dayjs.extend(relativeTime)
 interface IProps {
     azureArticleData: IAzureArticleData[];
     latestArticles: IArticle[];
+    azureFollowerData: IAzureFollowerData[];
+    latestFollowers: IFollower[];
     user: IUser;
-    followers: IFollower[];
 }
 
-const IndexPage = ({ azureArticleData, latestArticles, user, followers }: IProps) => {
+const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latestFollowers, user }: IProps) => {
     const lastestArticlesAsAzureData: IAzureArticleData = {
         fetchedAt: '',
         count: 1,
@@ -52,14 +55,15 @@ const IndexPage = ({ azureArticleData, latestArticles, user, followers }: IProps
     }
 
     const now = getCombinedArticleViewsReactionsComments(latestArticles);
-    const { day, week, month } = getHistoricalDataForOverview(azureArticleData, latestArticles);
+    const { day, week, month } = getHistoricalArticleDataForOverview(azureArticleData, latestArticles);
+    const historicFollowerData = getHistoricalFollowerDataForOverview(azureFollowerData, latestFollowers);
 
     const latestArticle = getLatestPublishedArticle(latestArticles);
 
     const mockStats: IOverviewStat[] = [
         { name: 'Total post reactions', value: now.reactions, weekly: week.reactions, monthly: month.reactions },
         { name: 'Total post views', value: now.views, daily: day.views, weekly: week.views },
-        { name: 'Followers', value: followers.length, weekly: 43, monthly: 112 },
+        { name: 'Followers', value: latestFollowers.length, weekly: historicFollowerData.week, daily: historicFollowerData.day },
         { name: 'Posts published', value: now.publishedPosts, otherStats: [{ value: dayjs(latestArticle.publishedAt).fromNow(), desc: 'Last posted' }, { value: `${month.publishedPosts}`, desc: 'Last 30 days' }] },
     ]
 
@@ -76,16 +80,18 @@ const IndexPage = ({ azureArticleData, latestArticles, user, followers }: IProps
 }
 
 export async function getServerSideProps(): Promise<{ props: IProps }> {
-    const azureArticleData: IAzureArticleData[] = await getAzureData();
+    const azureArticleData: IAzureArticleData[] = await getAzureArticleData();
     const latestArticles: IArticle[] = await getArticles();
-    const followers: IFollower[] = await getFollowers();
+    const azureFollowerData: IAzureFollowerData[] = await getAzureFollowerData();
+    const latestFollowers: IFollower[] = await getFollowers();
     const user: IUser = await getUser();
 
     return {
         props: {
             azureArticleData,
             latestArticles,
-            followers,
+            azureFollowerData,
+            latestFollowers,
             user,
         },
     }

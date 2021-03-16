@@ -28,15 +28,13 @@ export const getCombinedCountDiffBetweenArticles = (olderArticles: IArticle[], n
     }
 }
 
-export const getHistoricalDataForOverview = (azureData: IAzureArticleData[], latestArticles: IArticle[]) => {
+export const getHistoricalArticleDataForOverview = (azureData: IAzureArticleData[], latestArticles: IArticle[]) => {
     const sortedLatestArticleFirst = azureData.sort((a, b) => dayjs(a.fetchedAt).isBefore(b.fetchedAt, 'hour') ? 1 : -1);
-    console.log(sortedLatestArticleFirst);
     const oldestAzureDataAvailable = sortedLatestArticleFirst[sortedLatestArticleFirst.length - 1];
 
     const dayAgoAzureData = sortedLatestArticleFirst.find((data) => dayjs().subtract(1, 'day').isSame(data.fetchedAt, 'hour')) || oldestAzureDataAvailable;
     const weekAgoAzureData = sortedLatestArticleFirst.find((data) => dayjs().subtract(1, 'week').isSame(data.fetchedAt, 'hour')) || oldestAzureDataAvailable;
     const monthAgoAzureData = sortedLatestArticleFirst.find((data) => dayjs().subtract(1, 'month').isSame(data.fetchedAt, 'hour')) || oldestAzureDataAvailable;
-    console.log({ dayAgoAzureData, weekAgoAzureData, monthAgoAzureData });
 
     const dayAgoDiff = getCombinedCountDiffBetweenArticles(dayAgoAzureData.articles, latestArticles);
     const weekAgoDiff = getCombinedCountDiffBetweenArticles(weekAgoAzureData.articles, latestArticles);

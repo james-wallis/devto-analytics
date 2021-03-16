@@ -1,5 +1,7 @@
 import IArticle from '../../interfaces/IArticle';
 import IAzureArticleData from '../../interfaces/IAzureArticleData';
+import IAzureFollowerData from '../../interfaces/IAzureFollowerData';
+import IFollower from '../../interfaces/IFollower';
 
 export const parseArticle = (data: any): IArticle => ({
     id: data.id,
@@ -22,3 +24,13 @@ export const parseAzureArticleData = (data: any): IAzureArticleData => ({
     articles: data.articles.map(parseArticle),
 });
 
+export const parseFollower = (item: any): IFollower => ({
+    id: item.id,
+    username: item.username
+});
+
+export const parseAzureFollowerData = (data: any): IAzureFollowerData => ({
+    fetchedAt: data.fetchedAt,
+    count: data.count,
+    followers: data.followers.map(parseFollower),
+});

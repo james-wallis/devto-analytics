@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime'
 import React from 'react';
+import GraphContainer from '../components/graphs/container';
 import Layout from '../components/Layout';
 import StatGrid from '../components/statGrid';
 import IArticle from '../interfaces/IArticle';
@@ -75,6 +76,12 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
                 <StatGrid stats={mockStats} />
             </div>
             <h2 className="text-2xl my-2 lg:my-4 font-bold leading-normal">Graphs</h2>
+            <GraphContainer
+                azureArticleData={azureArticleData}
+                latestArticles={latestArticles}
+                azureFollowerData={azureFollowerData}
+                latestFollowers={latestFollowers}
+            />
         </Layout>
     )
 }

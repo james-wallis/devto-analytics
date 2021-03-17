@@ -1,5 +1,5 @@
 import { FaDev } from 'react-icons/fa';
-import { FiGithub, FiMonitor, FiHelpCircle } from 'react-icons/fi';
+import { FiGithub, FiHelpCircle } from 'react-icons/fi';
 import Link from 'next/link';
 import IUser from '../interfaces/IUser';
 

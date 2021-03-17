@@ -1,4 +1,3 @@
-import IArticles from './IArticle';
 import IFollower from './IFollower';
 
 interface IAzureFollowerData {

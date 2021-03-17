@@ -7,7 +7,7 @@ interface IProps {
 const Stat = ({ value, desc, larger = false }: { value: number | string, desc: string, larger?: boolean }) => (
     <div className="w-1/2">
         <strong className={`text-card-secondary-color font-semibold block overflow-hidden overflow-ellipsis ${larger ? 'text-xl' : 'text-base leading-7'}`}>
-            {typeof value === 'number' ? value.toLocaleString() : value}
+            {typeof value === 'number' ? `+${value.toLocaleString()}` : value}
         </strong>
         <span>{desc}</span>
     </div>

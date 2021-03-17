@@ -32,5 +32,5 @@ export const parseFollower = (item: any): IFollower => ({
 export const parseAzureFollowerData = (data: any): IAzureFollowerData => ({
     fetchedAt: data.fetchedAt,
     count: data.count,
-    followers: data.followers.map(parseFollower),
+    followers: data.followers && data.followers.length > 0 ? data.followers.map(parseFollower) : [],
 });

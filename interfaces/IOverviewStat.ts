@@ -4,6 +4,7 @@ interface IOverviewStat {
     otherStats?: {
         value: string;
         desc: string;
+        larger?: boolean;
     }[];
     daily?: number;
     weekly?: number;

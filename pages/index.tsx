@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime'
+import { GetStaticProps } from 'next';
 import React from 'react';
 import GraphContainer from '../components/graphs/container';
 import Layout from '../components/Layout';
@@ -61,11 +62,11 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
 
     const latestArticle = getLatestPublishedArticle(latestArticles);
 
-    const mockStats: IOverviewStat[] = [
+    const stats: IOverviewStat[] = [
         { name: 'Total post reactions', value: now.reactions, weekly: week.reactions, monthly: month.reactions },
         { name: 'Total post views', value: now.views, daily: day.views, weekly: week.views },
         { name: 'Followers', value: latestFollowers.length, weekly: historicFollowerData.week, daily: historicFollowerData.day },
-        { name: 'Posts published', value: now.publishedPosts, otherStats: [{ value: dayjs(latestArticle.publishedAt).fromNow(), desc: 'Last posted' }, { value: `${month.publishedPosts}`, desc: 'Last 30 days' }] },
+        { name: 'Posts published', value: now.publishedPosts, otherStats: [{ value: dayjs(latestArticle.publishedAt).fromNow(), desc: 'Last posted' }, { value: `${month.publishedPosts}`, desc: 'Last 30 days', larger: true }] },
     ]
 
 
@@ -73,7 +74,7 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
         <Layout title="Analytics Dashboard" user={user}>
             <h1 className="text-3xl my-2 lg:my-4 font-bold leading-normal">Dashboard</h1>
             <div>
-                <StatGrid stats={mockStats} />
+                <StatGrid stats={stats} />
             </div>
             <h2 className="text-2xl my-2 lg:my-4 font-bold leading-normal">Graphs</h2>
             <GraphContainer
@@ -86,12 +87,22 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
     )
 }
 
-export async function getServerSideProps(): Promise<{ props: IProps }> {
-    const azureArticleData: IAzureArticleData[] = await getAzureArticleData();
-    const latestArticles: IArticle[] = await getArticles();
-    const azureFollowerData: IAzureFollowerData[] = await getAzureFollowerData();
-    const latestFollowers: IFollower[] = await getFollowers();
-    const user: IUser = await getUser();
+export const getStaticProps: GetStaticProps = async () => {
+    const promises: Promise<any>[] = [
+        getAzureArticleData(),
+        getArticles(),
+        getAzureFollowerData(),
+        getFollowers(),
+        getUser(),
+    ];
+
+    const [
+        azureArticleData,
+        latestArticles,
+        azureFollowerData,
+        latestFollowers,
+        user,
+    ] = await Promise.all(promises);
 
     return {
         props: {
@@ -101,6 +112,7 @@ export async function getServerSideProps(): Promise<{ props: IProps }> {
             latestFollowers,
             user,
         },
+        revalidate: 60, // In seconds
     }
 }
 

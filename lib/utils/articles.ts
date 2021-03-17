@@ -28,17 +28,27 @@ export const getCombinedCountDiffBetweenArticles = (olderArticles: IArticle[], n
     }
 }
 
+export const getArticlesPublishedSince = (range: dayjs.OpUnitType, published: boolean, publishedAt: string) => (
+    published && publishedAt && dayjs().subtract(1, range).hour(0).isBefore(publishedAt)
+)
+
 export const getHistoricalArticleDataForOverview = (azureData: IAzureArticleData[], latestArticles: IArticle[]) => {
     const sortedLatestArticleFirst = azureData.sort((a, b) => dayjs(a.fetchedAt).isBefore(b.fetchedAt, 'hour') ? 1 : -1);
     const oldestAzureDataAvailable = sortedLatestArticleFirst[sortedLatestArticleFirst.length - 1];
 
-    const dayAgoAzureData = sortedLatestArticleFirst.find((data) => dayjs().subtract(1, 'day').isSame(data.fetchedAt, 'hour')) || oldestAzureDataAvailable;
-    const weekAgoAzureData = sortedLatestArticleFirst.find((data) => dayjs().subtract(1, 'week').isSame(data.fetchedAt, 'hour')) || oldestAzureDataAvailable;
-    const monthAgoAzureData = sortedLatestArticleFirst.find((data) => dayjs().subtract(1, 'month').isSame(data.fetchedAt, 'hour')) || oldestAzureDataAvailable;
+    const ranges: dayjs.OpUnitType[] = ['day', 'week', 'month'];
+    const [dayAgoDiff, weekAgoDiff, monthAgoDiff] = ranges.map((range: dayjs.OpUnitType): ICombinedArticleStats => {
+        const azureDataWithinRange = sortedLatestArticleFirst.find((data) => dayjs().subtract(1, range).isSame(data.fetchedAt, 'hour')) || oldestAzureDataAvailable;
+        const articleDiffInRange = getCombinedCountDiffBetweenArticles(azureDataWithinRange.articles, latestArticles);
 
-    const dayAgoDiff = getCombinedCountDiffBetweenArticles(dayAgoAzureData.articles, latestArticles);
-    const weekAgoDiff = getCombinedCountDiffBetweenArticles(weekAgoAzureData.articles, latestArticles);
-    const monthAgoDiff = getCombinedCountDiffBetweenArticles(monthAgoAzureData.articles, latestArticles);
+        // Use latestArticles to get amount of articles published since the range start
+        const publishedPostsSinceRangeStart = latestArticles.filter(({ published, publishedAt }) => getArticlesPublishedSince(range, published, publishedAt));
+        return {
+            ...articleDiffInRange,
+            publishedPosts: publishedPostsSinceRangeStart.length,
+        }
+    });
+
     return {
         day: dayAgoDiff,
         week: weekAgoDiff,

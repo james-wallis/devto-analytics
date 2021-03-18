@@ -9,11 +9,12 @@ import IArticle from '../interfaces/IArticle';
 import IAzureArticleData from '../interfaces/IAzureArticleData';
 import IAzureFollowerData from '../interfaces/IAzureFollowerData';
 import IFollower from '../interfaces/IFollower';
-import IOverviewStat from '../interfaces/IOverviewStat';
+import IOverviewStats from '../interfaces/IOverviewStats';
+import IStat from '../interfaces/IStat';
 import IUser from '../interfaces/IUser';
 import { getAzureArticleData, getAzureFollowerData } from '../lib/azure';
 import { getArticles, getFollowers, getUser } from '../lib/devto';
-import { getCombinedArticleViewsReactionsComments, getHistoricalArticleDataForOverview, getLatestPublishedArticle } from '../lib/utils/articles';
+import { getCombinedArticleViewsReactionsComments, getHistoricalArticleDataForOverview, getLatestPublishedArticle, orderMostReactedFirst, orderMostViewedFirst } from '../lib/utils/articles';
 import { getHistoricalFollowerDataForOverview } from '../lib/utils/followers';
 
 // Add .fromNow (relative times)
@@ -28,45 +29,32 @@ interface IProps {
 }
 
 const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latestFollowers, user }: IProps) => {
-    const lastestArticlesAsAzureData: IAzureArticleData = {
-        fetchedAt: '',
-        count: 1,
-        articles: latestArticles,
-    };
-
-    const data = [...azureArticleData, lastestArticlesAsAzureData].map((item) => {
-        const views = item.articles.reduce((count: number, article: IArticle) => article.pageViewsCount + count, 0);
-        const reactions = item.articles.reduce((count: number, article: IArticle) => article.publicReactionsCount + count, 0);
-        const comments = item.articles.reduce((count: number, article: IArticle) => article.commentsCount + count, 0);
-
-        return {
-            name: dayjs(item.fetchedAt).format('HH:mm'),
-            views,
-            viewsDiff: 0,
-            reactions,
-            reactionsDiff: 0,
-            comments,
-        }
-    });
-
-    for (let i = 1; i < data.length; i++) {
-        const item = data[i];
-        const prevItem = data[i - 1];
-        data[i].viewsDiff = item.views - prevItem.views;
-        data[i].reactionsDiff = item.reactions - prevItem.reactions;
-    }
-
     const now = getCombinedArticleViewsReactionsComments(latestArticles);
     const { day, week, month } = getHistoricalArticleDataForOverview(azureArticleData, latestArticles);
     const historicFollowerData = getHistoricalFollowerDataForOverview(azureFollowerData, latestFollowers);
 
     const latestArticle = getLatestPublishedArticle(latestArticles);
 
-    const stats: IOverviewStat[] = [
-        { name: 'Total post reactions', value: now.reactions, weekly: week.reactions, monthly: month.reactions },
-        { name: 'Total post views', value: now.views, daily: day.views, weekly: week.views },
-        { name: 'Followers', value: latestFollowers.length, weekly: historicFollowerData.week, daily: historicFollowerData.day },
-        { name: 'Posts published', value: now.publishedPosts, otherStats: [{ value: dayjs(latestArticle.publishedAt).fromNow(), desc: 'Last posted' }, { value: `${month.publishedPosts}`, desc: 'Last 30 days', larger: true }] },
+    const mostViewedArticles = orderMostViewedFirst(latestArticles).slice(0, 3);
+    const mostReactedArticles = orderMostReactedFirst(latestArticles).slice(0, 3);
+
+    // const stats: IOverviewStat[] = [
+    //     { type: 'stat', name: 'Total post reactions', value: now.reactions, weekly: week.reactions, monthly: month.reactions },
+    //     { type: 'stat', name: 'Total post views', value: now.views, daily: day.views, weekly: week.views },
+    //     { type: 'stat', name: 'Followers', value: latestFollowers.length, weekly: historicFollowerData.week, daily: historicFollowerData.day },
+    //     { type: 'stat', name: 'Posts published', value: now.publishedPosts, otherStats: [{ value: dayjs(latestArticle.publishedAt).fromNow(), desc: 'Last posted' }, { value: `${month.publishedPosts}`, desc: 'Last 30 days', larger: true }] },
+    //     { type: 'list', name: 'Top viewed posts', value: mostViewedArticles.map(({ pageViewsCount, title }) => `${pageViewsCount} - ${title}`) },
+    //     { type: 'list', name: 'Top reacted posts', value: mostReactedArticles.map(({ publicReactionsCount, title }) => `${publicReactionsCount} - ${title}`) },
+    // ]
+
+    const stats: IOverviewStats[] = [
+        { type: 'stat', title: 'Total post reactions', headlineValue: now.reactions, stats: [{ text: 'Last 7 days', value: week.reactions }, { text: 'Last 30 days', value: month.reactions }] },
+        { type: 'stat', title: 'Total post views', headlineValue: now.views, stats: [{ text: 'Last 24 hours', value: day.views }, { text:  'Last 7 days', value: week.views }] },
+        { type: 'stat', title: 'Followers', headlineValue: latestFollowers.length, stats: [{ text: 'Last 24 hours', value: historicFollowerData.day }, { text:  'Last 7 days', value: historicFollowerData.week }] },
+        { type: 'stat', title: 'Posts published', headlineValue: now.publishedPosts, stats: [{ text: 'Last posted', value: dayjs(latestArticle.publishedAt).fromNow(), small: true }, { text: 'Last 30 days', value: `${month.publishedPosts}` }] },
+        { type: 'list', title: latestArticle.title, subtitle: 'Latest article', headlineValue: -1, stats: [{ text: 'Post views', value: latestArticle.pageViewsCount }, { text: 'Post reactions', value: latestArticle.publicReactionsCount }] },
+        { type: 'list', title: 'Top viewed posts', headlineValue: -1, stats: mostViewedArticles.map(({ pageViewsCount, title }): IStat => ({ text: title, value: pageViewsCount })) },
+        { type: 'list', title: 'Top reacted posts', headlineValue: -1, stats: mostReactedArticles.map(({ publicReactionsCount, title }): IStat => ({ text: title, value: publicReactionsCount })) },
     ]
 
 

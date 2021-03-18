@@ -61,3 +61,13 @@ export const getLatestPublishedArticle = (articles: IArticle[]) => {
     const [latestArticle] = publishedArticles.sort((a, b) => dayjs(a.publishedAt).isBefore(b.publishedAt) ? 1 : -1);
     return latestArticle;
 }
+
+export const orderMostViewedFirst = (articles: IArticle[]) => {
+    const publishedArticles = getPublishedArticles(articles);
+    return publishedArticles.sort((a, b) => a.pageViewsCount < b.pageViewsCount ? 1 : -1);
+}
+
+export const orderMostReactedFirst = (articles: IArticle[]) => {
+    const publishedArticles = getPublishedArticles(articles);
+    return publishedArticles.sort((a, b) => a.publicReactionsCount < b.publicReactionsCount ? 1 : -1);
+}

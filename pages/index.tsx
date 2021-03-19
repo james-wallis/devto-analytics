@@ -151,7 +151,7 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
                                         <time dateTime={publishedAt}>{dayjs(publishedAt).format('D MMM')}</time>
                                     </p>
                                 </div>
-                                <div className="flex flex-nowrap whitespace-nowrap text-sm text-card-tertiary-color">
+                                <div className="flex flex-nowrap whitespace-nowrap text-sm text-card-tertiary-color order-last md:order-none">
                                     {[publicReactionsCount, commentsCount, pageViewsCount].map((stat: number, i: number) => {
                                         let Icon: IconType;
                                         if (i === 0) Icon = FiHeart;
@@ -166,7 +166,7 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
                                         )
                                     })}
                                 </div>
-                                <div className="justify-self-end flex">
+                                <div className="justify-self-end flex order-last md:order-none">
                                     {['Manage', 'Edit'].map((str: string) => (
                                         <a
                                             href={`${url}/${str.toLowerCase()}`}
@@ -178,31 +178,69 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
                                         </a>
                                     ))}
                                 </div>
-                                <div className="grid col-span-full grid-cols-2 text-card-tertiary-color text-xs">
-                                    <div className="flex flex-col">
-                                        {/* <span>+23 +23 +23</span>
-                                        <span>+23 +23 +23</span>
-                                        <span>+23 +23 +23</span> */}
-                                        {/* {[publicReactionsCount, commentsCount, pageViewsCount].map((stat: number, i: number) => {
-                                            let Icon: IconType;
-                                            if (i === 0) Icon = FiHeart;
-                                            else if (i === 1) Icon = FiMessageCircle;
-                                            else Icon = FiEye;
+                                <div className="grid col-span-full grid-cols-1 md:grid-cols-3 text-card-tertiary-color text-xs">
+                                    <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3">
+                                        <div className="flex flex-row md:flex-col justify-between md:justify-start">
+                                            <p>24 hour increase:</p>
+                                            <div className="flex flex-row text-xs items-center mt-1">
+                                                {[publicReactionsCount, commentsCount, pageViewsCount].map((stat: number, i: number) => {
+                                                    let Icon: IconType;
+                                                    if (i === 0) Icon = FiHeart;
+                                                    else if (i === 1) Icon = FiMessageCircle;
+                                                    else Icon = FiEye;
 
-                                            return (
-                                                <span className={`flex items-center p-1 ${i !== 0 ? 'ml-2' : ''}`}>
-                                                    <Icon className="mr-2 text-base"/>
-                                                    +{stat}
-                                                </span>
-                                            )
-                                        })} */}
+                                                    return (
+                                                        <span className={`flex items-center ${i !== 0 ? 'ml-2' : ''}`}>
+                                                            <Icon className="mr-1 text-sm"/>
+                                                            +0
+                                                        </span>
+                                                    )
+                                                })}
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-row md:flex-col justify-between md:justify-start">
+                                            <p>7 day increase:</p>
+                                            <div className="flex flex-row text-xs items-center mt-1">
+                                                {[publicReactionsCount, commentsCount, pageViewsCount].map((stat: number, i: number) => {
+                                                    let Icon: IconType;
+                                                    if (i === 0) Icon = FiHeart;
+                                                    else if (i === 1) Icon = FiMessageCircle;
+                                                    else Icon = FiEye;
+
+                                                    return (
+                                                        <span className={`flex items-center ${i !== 0 ? 'ml-2' : ''}`}>
+                                                            <Icon className="mr-1 text-sm"/>
+                                                            +0
+                                                        </span>
+                                                    )
+                                                })}
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-row md:flex-col justify-between md:justify-start">
+                                            <p>30 day increase:</p>
+                                            <div className="flex flex-row text-xs items-center mt-1">
+                                                {[publicReactionsCount, commentsCount, pageViewsCount].map((stat: number, i: number) => {
+                                                    let Icon: IconType;
+                                                    if (i === 0) Icon = FiHeart;
+                                                    else if (i === 1) Icon = FiMessageCircle;
+                                                    else Icon = FiEye;
+
+                                                    return (
+                                                        <span className={`flex items-center ${i !== 0 ? 'ml-2' : ''}`}>
+                                                            <Icon className="mr-1 text-sm"/>
+                                                            +0
+                                                        </span>
+                                                    )
+                                                })}
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="flex flex-col md:flex-row items-end md:items-center w-full justify-end">
+                                    <div className="hidden md:flex flex-row items-center w-full justify-end mt-2 md:mt-0">
                                         {[
                                             { text: 'Cover image', value: coverImage },
                                             { text: 'Canonical URL', value: canonicalUrl },
                                         ].map(({ text, value }) => (
-                                            <p className="flex flex-row-reverse md:flex-row items-center px-3">
+                                            <p className="flex flex-row-reverse md:flex-row items-center pl-3 md:px-3">
                                                 <span className="text-lg md:mr-1 ml-1 md:ml-0">
                                                     {!value ? <FiX /> : <FiCheck className="" />}
                                                 </span>

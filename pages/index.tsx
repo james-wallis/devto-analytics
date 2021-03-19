@@ -3,7 +3,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import { GetServerSideProps } from 'next';
 import React from 'react';
 import { IconType } from 'react-icons';
-import { FiEye, FiHeart, FiMessageCircle } from 'react-icons/fi';
+import { FiCheck, FiEye, FiHeart, FiMessageCircle, FiX } from 'react-icons/fi';
 
 // import GraphContainer from '../components/graphs/container';
 import Layout from '../components/Layout';
@@ -138,7 +138,7 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
                         </div>
                     </div>
                     <div className="bg-white shadow-card rounded-devto w-full">
-                        {sortedLatestArticleFirst.map(({ title, url, publishedAt, publicReactionsCount, commentsCount, pageViewsCount }: IArticle, i: number) => (
+                        {sortedLatestArticleFirst.map(({ title, url, publishedAt, publicReactionsCount, commentsCount, pageViewsCount, canonicalUrl, coverImage }: IArticle, i: number) => (
                             <div className={`grid grid-cols-2 md:grid-cols-4 gap-1 md:gap-2 items-center p-4 ${i !== 0 ? 'border-t border-base-border' : ''}`}>
                                 <div className="col-span-2">
                                     <h3 className="flex items-center text-link font-bold text-devto-h3">
@@ -178,11 +178,42 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
                                         </a>
                                     ))}
                                 </div>
+                                <div className="grid col-span-full grid-cols-2 text-card-tertiary-color text-xs">
+                                    <div className="flex flex-col">
+                                        {/* <span>+23 +23 +23</span>
+                                        <span>+23 +23 +23</span>
+                                        <span>+23 +23 +23</span> */}
+                                        {/* {[publicReactionsCount, commentsCount, pageViewsCount].map((stat: number, i: number) => {
+                                            let Icon: IconType;
+                                            if (i === 0) Icon = FiHeart;
+                                            else if (i === 1) Icon = FiMessageCircle;
+                                            else Icon = FiEye;
+
+                                            return (
+                                                <span className={`flex items-center p-1 ${i !== 0 ? 'ml-2' : ''}`}>
+                                                    <Icon className="mr-2 text-base"/>
+                                                    +{stat}
+                                                </span>
+                                            )
+                                        })} */}
+                                    </div>
+                                    <div className="flex flex-col md:flex-row items-end md:items-center w-full justify-end">
+                                        {[
+                                            { text: 'Cover image', value: coverImage },
+                                            { text: 'Canonical URL', value: canonicalUrl },
+                                        ].map(({ text, value }) => (
+                                            <p className="flex flex-row-reverse md:flex-row items-center px-3">
+                                                <span className="text-lg md:mr-1 ml-1 md:ml-0">
+                                                    {!value ? <FiX /> : <FiCheck className="" />}
+                                                </span>
+                                                {text}
+                                            </p>
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
                         ))}
-
                     </div>
-
                 </div>
             </div>
         </Layout>

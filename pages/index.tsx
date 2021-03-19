@@ -183,7 +183,7 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
                                         <div className="flex flex-row md:flex-col justify-between md:justify-start">
                                             <p>24 hour increase:</p>
                                             <div className="flex flex-row text-xs items-center mt-1">
-                                                {[publicReactionsCount, commentsCount, pageViewsCount].map((stat: number, i: number) => {
+                                                {[publicReactionsCount, commentsCount, pageViewsCount].map((_, i: number) => {
                                                     let Icon: IconType;
                                                     if (i === 0) Icon = FiHeart;
                                                     else if (i === 1) Icon = FiMessageCircle;
@@ -201,7 +201,7 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
                                         <div className="flex flex-row md:flex-col justify-between md:justify-start">
                                             <p>7 day increase:</p>
                                             <div className="flex flex-row text-xs items-center mt-1">
-                                                {[publicReactionsCount, commentsCount, pageViewsCount].map((stat: number, i: number) => {
+                                                {[publicReactionsCount, commentsCount, pageViewsCount].map((_, i: number) => {
                                                     let Icon: IconType;
                                                     if (i === 0) Icon = FiHeart;
                                                     else if (i === 1) Icon = FiMessageCircle;
@@ -219,7 +219,7 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
                                         <div className="flex flex-row md:flex-col justify-between md:justify-start">
                                             <p>30 day increase:</p>
                                             <div className="flex flex-row text-xs items-center mt-1">
-                                                {[publicReactionsCount, commentsCount, pageViewsCount].map((stat: number, i: number) => {
+                                                {[publicReactionsCount, commentsCount, pageViewsCount].map((_, i: number) => {
                                                     let Icon: IconType;
                                                     if (i === 0) Icon = FiHeart;
                                                     else if (i === 1) Icon = FiMessageCircle;

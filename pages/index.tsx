@@ -5,7 +5,7 @@ import React from 'react';
 import { IconType } from 'react-icons';
 import { FiEye, FiHeart, FiMessageCircle } from 'react-icons/fi';
 
-import GraphContainer from '../components/graphs/container';
+// import GraphContainer from '../components/graphs/container';
 import Layout from '../components/Layout';
 import StatGrid from '../components/statGrid';
 import IArticle from '../interfaces/IArticle';
@@ -13,11 +13,10 @@ import IAzureArticleData from '../interfaces/IAzureArticleData';
 import IAzureFollowerData from '../interfaces/IAzureFollowerData';
 import IFollower from '../interfaces/IFollower';
 import IOverviewStats from '../interfaces/IOverviewStats';
-import IStat from '../interfaces/IStat';
 import IUser from '../interfaces/IUser';
 import { getAzureArticleData, getAzureFollowerData } from '../lib/azure';
 import { getArticles, getFollowers, getUser } from '../lib/devto';
-import { getCombinedArticleViewsReactionsComments, getHistoricalArticleDataForOverview, getLatestPublishedArticle, getPublishedArticles, orderMostReactedFirst, orderMostViewedFirst } from '../lib/utils/articles';
+import { getCombinedArticleViewsReactionsComments, getHistoricalArticleDataForOverview, getLatestPublishedArticle, getPublishedArticles } from '../lib/utils/articles';
 import { getHistoricalFollowerDataForOverview } from '../lib/utils/followers';
 
 // Add .fromNow (relative times)
@@ -38,8 +37,8 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
 
     const latestArticle = getLatestPublishedArticle(latestArticles);
 
-    const mostViewedArticles = orderMostViewedFirst(latestArticles).slice(0, 3);
-    const mostReactedArticles = orderMostReactedFirst(latestArticles).slice(0, 3);
+    // const mostViewedArticles = orderMostViewedFirst(latestArticles).slice(0, 3);
+    // const mostReactedArticles = orderMostReactedFirst(latestArticles).slice(0, 3);
 
     // const stats: IOverviewStat[] = [
     //     { type: 'stat', name: 'Total post reactions', value: now.reactions, weekly: week.reactions, monthly: month.reactions },
@@ -68,7 +67,7 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
                 <h1 className="text-3xl my-2 lg:my-4 font-bold leading-normal">Dashboard</h1>
                 <StatGrid stats={stats} />
             </div>
-            <div className="grid md:grid-cols-5 p-4 gap-4">
+            <div className="grid md:grid-cols-5 md:p-4 gap-4">
                 <aside>
                     <nav className="hidden md:block">
                         <button className="p-3 sm:p-2 flex items-center rounded-devto bg-white w-full font-medium">

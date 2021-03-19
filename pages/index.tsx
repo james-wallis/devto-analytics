@@ -61,6 +61,14 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
 
     const sortedLatestArticleFirst = getPublishedArticles(latestArticles).sort((a, b) => dayjs(a.publishedAt).isBefore(b.publishedAt, 'hour') ? 1 : -1);
 
+    const selectOpts = [
+        { text: 'Recently published', value: 'published-desc' },
+        // { text: 'Recently created', value: 'creation-desc' },
+        { text: 'Most views', value: 'views-desc' },
+        { text: 'Most reactions', value: 'reactions-desc' },
+        { text: 'Most comments', value: 'comments-desc' },
+    ];
+
     return (
         <Layout title="Analytics Dashboard" user={user}>
             <div className="pb-4 px-2 lg:px-4">
@@ -121,7 +129,11 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
                                     focus:bg-white focus:shadow-form-hover focus:border-form-background-hover
                                 "
                             >
-                                <option value="published-desc">Recently published</option>
+                                {
+                                    selectOpts.map(({ text, value }) => (
+                                        <option value={value}>{text}</option>
+                                    ))
+                                }
                             </select>
                         </div>
                     </div>

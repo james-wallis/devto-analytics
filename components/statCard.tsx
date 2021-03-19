@@ -3,10 +3,10 @@ import IStat from '../interfaces/IStat';
 
 const Stat = ({ value, text, small = false }: { value: number | string, text: string, small?: boolean }) => (
     <div className="w-1/2">
-        <strong className={`text-card-secondary-color font-semibold block overflow-hidden overflow-ellipsis ${small ? 'text-base leading-7' : 'text-xl'}`}>
+        <strong className={`text-card-secondary-color font-semibold block overflow-hidden overflow-ellipsis ${small ? 'text-sm md:text-base leading-7' : 'text-lg md:text-xl'}`}>
             {typeof value === 'number' ? `+${value.toLocaleString()}` : value}
         </strong>
-        <span>{text}</span>
+        <span className="text-xs md:text-sm">{text}</span>
     </div>
 )
 

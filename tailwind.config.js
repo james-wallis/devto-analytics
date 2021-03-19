@@ -31,6 +31,7 @@ module.exports = {
                 'link': '#3b49df',
                 'indicator-text': '#363d44',
                 'indicator-background': '#d2d6db',
+                'base-border': '#eef0f1',
             },
             boxShadow: {
                 'card': '0 0 0 1px rgba(8, 9, 10, 0.05)',
@@ -39,6 +40,9 @@ module.exports = {
             borderRadius: {
                 'devto': '5px',
             },
+            fontSize: {
+                'devto-h3': '1.17em',
+            }
         },
     },
     variants: {

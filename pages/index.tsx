@@ -126,10 +126,10 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
                         </div>
                     </div>
                     <div className="bg-white shadow-card rounded-devto w-full">
-                        {sortedLatestArticleFirst.map(({ title, url, publishedAt, publicReactionsCount, commentsCount, pageViewsCount }: IArticle) => (
-                            <div className="grid grid-cols-4 gap-1 md:gap-2 items-center p-4">
+                        {sortedLatestArticleFirst.map(({ title, url, publishedAt, publicReactionsCount, commentsCount, pageViewsCount }: IArticle, i: number) => (
+                            <div className={`grid grid-cols-2 md:grid-cols-4 gap-1 md:gap-2 items-center p-4 ${i !== 0 ? 'border border-base-border' : ''}`}>
                                 <div className="col-span-2">
-                                    <h3 className="flex items-center text-link font-bold text-xl">
+                                    <h3 className="flex items-center text-link font-bold text-devto-h3">
                                         <a href={url} rel="noreferrer noopener" target="_blank">
                                             {title}
                                         </a>

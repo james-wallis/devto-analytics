@@ -72,7 +72,7 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
     return (
         <Layout title="Analytics Dashboard" user={user}>
             <div className="pb-4 px-2 lg:px-4">
-                <h1 className="text-3xl my-2 lg:my-4 font-bold leading-normal">Dashboard</h1>
+                <h1 className="text-2xl md:text-3xl my-2 lg:my-4 font-bold leading-normal">Dashboard</h1>
                 <StatGrid stats={stats} />
             </div>
             <div className="grid md:grid-cols-5 md:p-4 gap-4">
@@ -131,7 +131,7 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
                             >
                                 {
                                     selectOpts.map(({ text, value }) => (
-                                        <option value={value}>{text}</option>
+                                        <option key={value} value={value}>{text}</option>
                                     ))
                                 }
                             </select>

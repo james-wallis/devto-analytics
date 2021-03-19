@@ -17,7 +17,7 @@ const Layout = ({ children, title = 'This is the default title', user }: IProps)
             <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         </Head>
         <Header user={user} />
-        <main className="max-w-site m-auto px-2 lg:px-4">
+        <main className="max-w-site m-auto">
             {children}
         </main>
         <footer className="h-36 flex items-end justify-center mb-6">

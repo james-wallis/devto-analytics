@@ -13,7 +13,7 @@ const Stat = ({ value, text, small = false }: { value: number | string, text: st
 const StatCard = ({ type, title, subtitle, headlineValue, stats }: IOverviewStats) => {
     const isList = type === 'list';
     return (
-        <div className="p-3 md:p-6 bg-card-secondary-bg text-card-secondary-color flex flex-col shadow-card rounded-md">
+        <div className="p-3 md:p-6 bg-card-secondary-bg text-card-secondary-color flex flex-col shadow-card rounded-devto">
             <strong className={`${isList ? 'text-base md:text-xl' : 'text-2xl md:text-3xl'} leading-tight md:leading-tight font-bold`}>{isList ? title : headlineValue.toLocaleString()}</strong>
             {subtitle && <span className="mt-1 text-xs md:text-sm text-card-tertiary-color">{subtitle}</span>}
             {isList ? (

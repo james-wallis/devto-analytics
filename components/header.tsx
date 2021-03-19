@@ -1,4 +1,3 @@
-import { FaDev } from 'react-icons/fa';
 import { FiGithub, FiHelpCircle } from 'react-icons/fi';
 import Link from 'next/link';
 import IUser from '../interfaces/IUser';
@@ -12,14 +11,14 @@ const Header = ({ user }: IProps) => (
         <div className="max-w-site m-auto px-2 lg:px-4 h-full flex flex-row items-center justify-between">
             <Link href="/">
                 <a className="flex items-center">
-                    <FaDev className="text-5xl rounded-xl mr-4" />
+                    <img src="/devto-icon.svg" alt="the dev.to logo" className="mr-4 h-full w-auto" />
                     <h1 className="text-lg">Analytics</h1>
                 </a>
             </Link>
             <div className="flex items-center">
                 <a
                     className="
-                        mr-2 hidden md:block rounded-md text-center py-2 px-4
+                        mr-2 hidden md:block rounded-devto text-center py-2 px-4
                         bg-button-primary-bg hover:bg-button-primary-bg-hover
                         text-button-primary-color hover:text-button-primary-color-hover
                         transition-colors font-medium

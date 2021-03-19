@@ -25,9 +25,19 @@ module.exports = {
                 'card-secondary-color': '#202428',
                 'card-secondary-bg': '#f9fafa',
                 'card-tertiary-color': '#64707d',
+                'form-background-color': '#f9fafa',
+                'form-border-color': '#b5bdc4',
+                'form-background-hover': '#3b49df',
+                'link': '#3b49df',
+                'indicator-text': '#363d44',
+                'indicator-background': '#d2d6db',
             },
             boxShadow: {
-                'card': '0 0 0 1px rgba(8, 9, 10, 0.05)'
+                'card': '0 0 0 1px rgba(8, 9, 10, 0.05)',
+                'form-hover': '1px 1px #3b49df',
+            },
+            borderRadius: {
+                'devto': '5px',
             },
         },
     },

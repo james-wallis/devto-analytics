@@ -3,7 +3,7 @@ import IStat from '../interfaces/IStat';
 
 const Stat = ({ value, text, small = false }: { value: number | string, text: string, small?: boolean }) => (
     <div className="w-1/2">
-        <strong className={`text-card-secondary-color font-semibold block overflow-hidden overflow-ellipsis ${small ? 'text-sm md:text-base leading-7' : 'text-lg md:text-xl'}`}>
+        <strong className={`text-card-secondary-color font-semibold block overflow-hidden overflow-ellipsis ${small ? 'text-sm md:text-base leading-7' : 'text-base md:text-xl'}`}>
             {typeof value === 'number' ? `+${value.toLocaleString()}` : value}
         </strong>
         <span className="text-xs md:text-sm">{text}</span>
@@ -28,7 +28,7 @@ const StatCard = ({ type, title, subtitle, headlineValue, stats }: IOverviewStat
             ) : (
                 <>
                     <span className="text-card-tertiary-color">{title}</span>
-                    <div className="text-sm text-card-tertiary-color mt-2 flex flex-row">
+                    <div className="text-sm text-card-tertiary-color mt-1 md:mt-2 flex flex-row">
                         {stats && stats.map(({ value, text, small = false }) => (
                             <Stat key={`${text}-${value}`} value={value} text={text} small={small} />
                         ))}

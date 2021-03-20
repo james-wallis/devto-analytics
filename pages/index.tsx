@@ -52,7 +52,7 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
     const stats: IOverviewStats[] = [
         { type: 'stat', title: 'Total post reactions', headlineValue: now.reactions, stats: [{ text: 'Last 7 days', value: week.reactions }, { text: 'Last 30 days', value: month.reactions }] },
         { type: 'stat', title: 'Total post views', headlineValue: now.views, stats: [{ text: 'Last 24 hours', value: day.views }, { text:  'Last 7 days', value: week.views }] },
-        { type: 'stat', title: 'Followers', headlineValue: latestFollowers.length, stats: [{ text: 'Last 24 hours', value: historicFollowerData.day }, { text:  'Last 7 days', value: historicFollowerData.week }] },
+        { type: 'stat', title: 'Total followers', headlineValue: latestFollowers.length, stats: [{ text: 'Last 24 hours', value: historicFollowerData.day }, { text:  'Last 7 days', value: historicFollowerData.week }] },
         { type: 'stat', title: 'Posts published', headlineValue: now.publishedPosts, stats: [{ text: 'Last posted', value: dayjs(latestArticle.publishedAt).fromNow(), small: true }, { text: 'Last 30 days', value: `${month.publishedPosts}` }] },
         // { type: 'list', title: latestArticle.title, subtitle: 'Latest article', headlineValue: -1, stats: [{ text: 'Post views', value: latestArticle.pageViewsCount }, { text: 'Post reactions', value: latestArticle.publicReactionsCount }] },
         // { type: 'list', title: 'Top viewed posts', headlineValue: -1, stats: mostViewedArticles.map(({ pageViewsCount, title }): IStat => ({ text: title, value: pageViewsCount })) },
@@ -139,7 +139,7 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
                     </div>
                     <div className="bg-white shadow-card rounded-devto w-full">
                         {sortedLatestArticleFirst.map(({ title, url, publishedAt, publicReactionsCount, commentsCount, pageViewsCount, canonicalUrl, coverImage }: IArticle, i: number) => (
-                            <div className={`grid grid-cols-2 md:grid-cols-4 gap-1 md:gap-2 items-center p-4 ${i !== 0 ? 'border-t border-base-border' : ''}`}>
+                            <div className={`grid grid-cols-2 md:grid-cols-4 gap-2 items-center p-4 ${i !== 0 ? 'border-t border-base-border' : ''}`}>
                                 <div className="col-span-2">
                                     <h3 className="flex items-center text-link font-bold text-devto-h3">
                                         <a href={url} rel="noreferrer noopener" target="_blank">
@@ -178,69 +178,66 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
                                         </a>
                                     ))}
                                 </div>
-                                <div className="grid col-span-full grid-cols-1 md:grid-cols-3 text-card-tertiary-color text-xs">
-                                    <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3">
-                                        <div className="flex flex-row md:flex-col justify-between md:justify-start">
-                                            <p>24 hour increase:</p>
-                                            <div className="flex flex-row text-xs items-center mt-1">
-                                                {[publicReactionsCount, commentsCount, pageViewsCount].map((_, i: number) => {
+                                <div className="grid col-span-full grid-cols-1 md:grid-cols-2 text-card-tertiary-color text-xs">
+                                    <div className="flex justify-start md:pr-4 md:col-span-1 mx-1 md:mx-0">
+                                        <div className="flex flex-col md:flex-row items-start md:items-center md:justify-start mr-6">
+                                            <p className="font-medium md:mr-1">24 hours:</p>
+                                            <div className="flex flex-row text-xs items-center">
+                                                {[publicReactionsCount, pageViewsCount].map((stat, i: number) => {
                                                     let Icon: IconType;
                                                     if (i === 0) Icon = FiHeart;
-                                                    else if (i === 1) Icon = FiMessageCircle;
                                                     else Icon = FiEye;
 
                                                     return (
                                                         <span className={`flex items-center ${i !== 0 ? 'ml-2' : ''}`}>
                                                             <Icon className="mr-1 text-sm"/>
-                                                            +0
+                                                            {stat}
                                                         </span>
                                                     )
                                                 })}
                                             </div>
                                         </div>
-                                        <div className="flex flex-row md:flex-col justify-between md:justify-start">
-                                            <p>7 day increase:</p>
-                                            <div className="flex flex-row text-xs items-center mt-1">
-                                                {[publicReactionsCount, commentsCount, pageViewsCount].map((_, i: number) => {
+                                        <div className="flex flex-col md:flex-row items-start md:items-center justify-start mr-6">
+                                            <p className="font-medium md:mr-1">7 days:</p>
+                                            <div className="flex flex-row text-xs items-center">
+                                                {[publicReactionsCount, pageViewsCount].map((stat, i: number) => {
                                                     let Icon: IconType;
                                                     if (i === 0) Icon = FiHeart;
-                                                    else if (i === 1) Icon = FiMessageCircle;
                                                     else Icon = FiEye;
 
                                                     return (
                                                         <span className={`flex items-center ${i !== 0 ? 'ml-2' : ''}`}>
                                                             <Icon className="mr-1 text-sm"/>
-                                                            +0
+                                                            {stat}
                                                         </span>
                                                     )
                                                 })}
                                             </div>
                                         </div>
-                                        <div className="flex flex-row md:flex-col justify-between md:justify-start">
-                                            <p>30 day increase:</p>
-                                            <div className="flex flex-row text-xs items-center mt-1">
-                                                {[publicReactionsCount, commentsCount, pageViewsCount].map((_, i: number) => {
+                                        <div className="flex flex-col md:flex-row items-start md:items-center justify-start">
+                                            <p className="font-medium md:mr-1">30 days:</p>
+                                            <div className="flex flex-row text-xs items-center">
+                                                {[publicReactionsCount, pageViewsCount].map((stat, i: number) => {
                                                     let Icon: IconType;
                                                     if (i === 0) Icon = FiHeart;
-                                                    else if (i === 1) Icon = FiMessageCircle;
                                                     else Icon = FiEye;
 
                                                     return (
                                                         <span className={`flex items-center ${i !== 0 ? 'ml-2' : ''}`}>
                                                             <Icon className="mr-1 text-sm"/>
-                                                            +0
+                                                            {stat}
                                                         </span>
                                                     )
                                                 })}
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="hidden md:flex flex-row items-center w-full justify-end mt-2 md:mt-0">
+                                    <div className="hidden md:flex flex-col md:flex-row items-end md:items-center w-full justify-end">
                                         {[
                                             { text: 'Cover image', value: coverImage },
                                             { text: 'Canonical URL', value: canonicalUrl },
                                         ].map(({ text, value }) => (
-                                            <p className="flex flex-row-reverse md:flex-row items-center pl-3 md:px-3">
+                                            <p className="flex flex-row-reverse md:flex-row items-end md:items-center md:pl-3 md:px-3">
                                                 <span className="text-lg md:mr-1 ml-1 md:ml-0">
                                                     {!value ? <FiX /> : <FiCheck className="" />}
                                                 </span>

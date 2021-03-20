@@ -1,3 +1,5 @@
+import IArticleDiffs from './IArticleDiffs';
+
 interface IArticle {
     id: number
     title: string
@@ -11,6 +13,14 @@ interface IArticle {
     pageViewsCount: number
     coverImage: string
     tags: string[]
+}
+
+export interface IArticleWithDiffs extends IArticle {
+    diffs: {
+        day: IArticleDiffs;
+        week: IArticleDiffs;
+        month: IArticleDiffs;
+    }
 }
 
 export default IArticle;

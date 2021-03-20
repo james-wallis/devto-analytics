@@ -3,21 +3,26 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import { GetServerSideProps } from 'next';
 import React from 'react';
 import { IconType } from 'react-icons';
-import { FiCheck, FiEye, FiHeart, FiMessageCircle, FiX } from 'react-icons/fi';
+import { FiEye, FiHeart, FiMessageCircle } from 'react-icons/fi';
 
 // import GraphContainer from '../components/graphs/container';
 import Layout from '../components/Layout';
 import StatGrid from '../components/statGrid';
-import IArticle from '../interfaces/IArticle';
-import IAzureArticleData from '../interfaces/IAzureArticleData';
+import IArticle, { IArticleWithDiffs } from '../interfaces/IArticle';
+import IAzureArticleData, { IDatedAzureArticleData } from '../interfaces/IAzureArticleData';
 import IAzureFollowerData from '../interfaces/IAzureFollowerData';
+import ICombinedArticleStats from '../interfaces/ICombinedArticleStats';
 import IFollower from '../interfaces/IFollower';
+import IHistoricalArticleData from '../interfaces/IHistoricalArticleData';
+import IHistoricalFollowerData from '../interfaces/IHistoricalFollowerData';
 import IOverviewStats from '../interfaces/IOverviewStats';
 import IUser from '../interfaces/IUser';
 import { getAzureArticleData, getAzureFollowerData } from '../lib/azure';
 import { getArticles, getFollowers, getUser } from '../lib/devto';
-import { getCombinedArticleViewsReactionsComments, getHistoricalArticleDataForOverview, getLatestPublishedArticle, getPublishedArticles } from '../lib/utils/articles';
+import { getAzureArticleDataDayWeekMonth, getCombinedArticleViewsReactionsComments, getHistorialDiffsForLatestArticles, getHistoricalArticleDataForOverview, getLatestPublishedArticle, getPublishedArticles } from '../lib/utils/articles';
 import { getHistoricalFollowerDataForOverview } from '../lib/utils/followers';
+import { getOverviewStats } from '../lib/utils/overview';
+import { latestArticleFirst } from '../lib/utils/sorting';
 
 // Add .fromNow (relative times)
 dayjs.extend(relativeTime)
@@ -31,35 +36,23 @@ interface IProps {
 }
 
 const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latestFollowers, user }: IProps) => {
-    const now = getCombinedArticleViewsReactionsComments(latestArticles);
-    const { day, week, month } = getHistoricalArticleDataForOverview(azureArticleData, latestArticles);
-    const historicFollowerData = getHistoricalFollowerDataForOverview(azureFollowerData, latestFollowers);
+    const publishedLatestArticles = getPublishedArticles(latestArticles);
+    const latestArticle = getLatestPublishedArticle(publishedLatestArticles);
 
-    const latestArticle = getLatestPublishedArticle(latestArticles);
+    const azureArticleDataByDate: IDatedAzureArticleData = getAzureArticleDataDayWeekMonth(azureArticleData);
 
-    // const mostViewedArticles = orderMostViewedFirst(latestArticles).slice(0, 3);
-    // const mostReactedArticles = orderMostReactedFirst(latestArticles).slice(0, 3);
+    // Add the day, week, month diffs into the latestArticles
+    const latestArticlesWithDiffs: IArticleWithDiffs[] = getHistorialDiffsForLatestArticles(publishedLatestArticles, azureArticleDataByDate);
 
-    // const stats: IOverviewStat[] = [
-    //     { type: 'stat', name: 'Total post reactions', value: now.reactions, weekly: week.reactions, monthly: month.reactions },
-    //     { type: 'stat', name: 'Total post views', value: now.views, daily: day.views, weekly: week.views },
-    //     { type: 'stat', name: 'Followers', value: latestFollowers.length, weekly: historicFollowerData.week, daily: historicFollowerData.day },
-    //     { type: 'stat', name: 'Posts published', value: now.publishedPosts, otherStats: [{ value: dayjs(latestArticle.publishedAt).fromNow(), desc: 'Last posted' }, { value: `${month.publishedPosts}`, desc: 'Last 30 days', larger: true }] },
-    //     { type: 'list', name: 'Top viewed posts', value: mostViewedArticles.map(({ pageViewsCount, title }) => `${pageViewsCount} - ${title}`) },
-    //     { type: 'list', name: 'Top reacted posts', value: mostReactedArticles.map(({ publicReactionsCount, title }) => `${publicReactionsCount} - ${title}`) },
-    // ]
+    const latestCombinedArticleStats: ICombinedArticleStats = getCombinedArticleViewsReactionsComments(latestArticles);
 
-    const stats: IOverviewStats[] = [
-        { type: 'stat', title: 'Total post reactions', headlineValue: now.reactions, stats: [{ text: 'Last 7 days', value: week.reactions }, { text: 'Last 30 days', value: month.reactions }] },
-        { type: 'stat', title: 'Total post views', headlineValue: now.views, stats: [{ text: 'Last 24 hours', value: day.views }, { text:  'Last 7 days', value: week.views }] },
-        { type: 'stat', title: 'Total followers', headlineValue: latestFollowers.length, stats: [{ text: 'Last 24 hours', value: historicFollowerData.day }, { text:  'Last 7 days', value: historicFollowerData.week }] },
-        { type: 'stat', title: 'Posts published', headlineValue: now.publishedPosts, stats: [{ text: 'Last posted', value: dayjs(latestArticle.publishedAt).fromNow(), small: true }, { text: 'Last 30 days', value: `${month.publishedPosts}` }] },
-        // { type: 'list', title: latestArticle.title, subtitle: 'Latest article', headlineValue: -1, stats: [{ text: 'Post views', value: latestArticle.pageViewsCount }, { text: 'Post reactions', value: latestArticle.publicReactionsCount }] },
-        // { type: 'list', title: 'Top viewed posts', headlineValue: -1, stats: mostViewedArticles.map(({ pageViewsCount, title }): IStat => ({ text: title, value: pageViewsCount })) },
-        // { type: 'list', title: 'Top reacted posts', headlineValue: -1, stats: mostReactedArticles.map(({ publicReactionsCount, title }): IStat => ({ text: title, value: publicReactionsCount })) },
-    ]
+    const historicCombinedArticleData: IHistoricalArticleData = getHistoricalArticleDataForOverview(azureArticleData, latestArticles);
+    const historicCombinedFollowerData: IHistoricalFollowerData = getHistoricalFollowerDataForOverview(azureFollowerData, latestFollowers);
 
-    const sortedLatestArticleFirst = getPublishedArticles(latestArticles).sort((a, b) => dayjs(a.publishedAt).isBefore(b.publishedAt, 'hour') ? 1 : -1);
+
+    const overviewStats: IOverviewStats[] = getOverviewStats(
+        latestArticle, latestCombinedArticleStats, historicCombinedArticleData, historicCombinedFollowerData, latestFollowers.length
+    );
 
     const selectOpts = [
         { text: 'Recently published', value: 'published-desc' },
@@ -69,11 +62,12 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
         { text: 'Most comments', value: 'comments-desc' },
     ];
 
+
     return (
         <Layout title="Analytics Dashboard" user={user}>
             <div className="pb-4 px-2 lg:px-4">
                 <h1 className="text-2xl md:text-3xl my-2 lg:my-4 font-bold leading-normal">Dashboard</h1>
-                <StatGrid stats={stats} />
+                <StatGrid stats={overviewStats} />
             </div>
             <div className="grid md:grid-cols-5 md:p-4 gap-4">
                 <aside>
@@ -138,7 +132,7 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
                         </div>
                     </div>
                     <div className="bg-white shadow-card rounded-devto w-full">
-                        {sortedLatestArticleFirst.map(({ title, url, publishedAt, publicReactionsCount, commentsCount, pageViewsCount, canonicalUrl, coverImage }: IArticle, i: number) => (
+                        {latestArticlesWithDiffs.map(({ title, url, publishedAt, publicReactionsCount, commentsCount, pageViewsCount, diffs }: IArticleWithDiffs, i: number) => (
                             <div className={`grid grid-cols-2 md:grid-cols-4 gap-2 items-center p-4 ${i !== 0 ? 'border-t border-base-border' : ''}`}>
                                 <div className="col-span-2">
                                     <h3 className="flex items-center text-link font-bold text-devto-h3">
@@ -178,72 +172,48 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
                                         </a>
                                     ))}
                                 </div>
-                                <div className="grid col-span-full grid-cols-1 md:grid-cols-3 text-card-tertiary-color text-xs">
-                                    <div className="flex justify-between md:justify-start md:pr-4 md:col-span-2 mx-1 md:mx-0">
-                                        <div className="flex flex-col md:flex-row items-start md:items-center md:justify-start md:mr-4">
-                                            <p className="font-medium md:mr-1">24 hours<span className="hidden md:inline">:</span></p>
-                                            <div className="flex flex-row text-xs items-center">
-                                                {[publicReactionsCount, pageViewsCount].map((stat, i: number) => {
-                                                    let Icon: IconType;
-                                                    if (i === 0) Icon = FiHeart;
-                                                    else Icon = FiEye;
-
-                                                    return (
-                                                        <span className={`flex items-center ${i !== 0 ? 'ml-2' : ''}`}>
-                                                            <Icon className="mr-1 text-sm"/>
-                                                            {stat}
-                                                        </span>
-                                                    )
-                                                })}
-                                            </div>
-                                        </div>
-                                        <div className="flex flex-col md:flex-row items-center md:items-center justify-start md:mr-4">
-                                            <p className="font-medium md:mr-1">7 days<span className="hidden md:inline">:</span></p>
-                                            <div className="flex flex-row text-xs items-center">
-                                                {[publicReactionsCount, pageViewsCount].map((stat, i: number) => {
-                                                    let Icon: IconType;
-                                                    if (i === 0) Icon = FiHeart;
-                                                    else Icon = FiEye;
-
-                                                    return (
-                                                        <span className={`flex items-center ${i !== 0 ? 'ml-2' : ''}`}>
-                                                            <Icon className="mr-1 text-sm"/>
-                                                            {stat}
-                                                        </span>
-                                                    )
-                                                })}
-                                            </div>
-                                        </div>
-                                        <div className="flex flex-col md:flex-row items-end md:items-center justify-start">
-                                            <p className="font-medium md:mr-1">30 days<span className="hidden md:inline">:</span></p>
-                                            <div className="flex flex-row text-xs items-center">
-                                                {[publicReactionsCount, pageViewsCount].map((stat, i: number) => {
-                                                    let Icon: IconType;
-                                                    if (i === 0) Icon = FiHeart;
-                                                    else Icon = FiEye;
-
-                                                    return (
-                                                        <span className={`flex items-center ${i !== 0 ? 'ml-2' : ''}`}>
-                                                            <Icon className="mr-1 text-sm"/>
-                                                            {stat}
-                                                        </span>
-                                                    )
-                                                })}
-                                            </div>
+                                <div className="col-span-full flex justify-between md:justify-start ml-1 mr-3 md:mx-0 text-card-tertiary-color text-xs">
+                                    <div className="flex flex-col md:flex-row items-start md:items-center md:justify-start md:mr-4">
+                                        <p className="font-medium md:mr-1">24 hours<span className="hidden md:inline">:</span></p>
+                                        <div className="flex flex-row text-xs items-center">
+                                            {[diffs.day.reactions, diffs.day.pageViews].map((stat, i: number) => {
+                                                const Icon: IconType = (i === 0) ? FiHeart : FiEye;
+                                                return (
+                                                    <span className={`flex items-center ${i !== 0 ? 'ml-2' : ''}`}>
+                                                        <Icon className="mr-1 text-sm"/>
+                                                        {stat}
+                                                    </span>
+                                                )
+                                            })}
                                         </div>
                                     </div>
-                                    <div className="hidden md:flex flex-col md:flex-row items-end md:items-center w-full justify-end">
-                                        {[
-                                            { text: 'Cover image', value: coverImage },
-                                            { text: 'Canonical URL', value: canonicalUrl },
-                                        ].map(({ text, value }) => (
-                                            <p className="flex flex-row-reverse md:flex-row items-end md:items-center md:pl-3 md:px-3">
-                                                <span className="text-lg md:mr-1 ml-1 md:ml-0">
-                                                    {!value ? <FiX /> : <FiCheck className="" />}
-                                                </span>
-                                                {text}
-                                            </p>
-                                        ))}
+                                    <div className="flex flex-col md:flex-row items-center md:items-center justify-start md:mr-4">
+                                        <p className="font-medium md:mr-1">7 days<span className="hidden md:inline">:</span></p>
+                                        <div className="flex flex-row text-xs items-center">
+                                            {[diffs.week.reactions, diffs.week.pageViews].map((stat, i: number) => {
+                                                const Icon: IconType = (i === 0) ? FiHeart : FiEye;
+                                                return (
+                                                    <span className={`flex items-center ${i !== 0 ? 'ml-2' : ''}`}>
+                                                        <Icon className="mr-1 text-sm"/>
+                                                        {stat}
+                                                    </span>
+                                                )
+                                            })}
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col md:flex-row items-end md:items-center justify-start">
+                                        <p className="font-medium md:mr-1">30 days<span className="hidden md:inline">:</span></p>
+                                        <div className="flex flex-row text-xs items-center">
+                                            {[diffs.month.reactions, diffs.month.pageViews].map((stat, i: number) => {
+                                                const Icon: IconType = (i === 0) ? FiHeart : FiEye
+                                                return (
+                                                    <span className={`flex items-center ${i !== 0 ? 'ml-2' : ''}`}>
+                                                        <Icon className="mr-1 text-sm"/>
+                                                        {stat}
+                                                    </span>
+                                                )
+                                            })}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -274,7 +244,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
     return {
         props: {
-            azureArticleData,
+            azureArticleData: azureArticleData.sort(latestArticleFirst),
             latestArticles,
             azureFollowerData,
             latestFollowers,

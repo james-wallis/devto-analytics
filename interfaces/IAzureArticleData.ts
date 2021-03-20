@@ -6,4 +6,10 @@ interface IAzureArticleData {
     articles: IArticles[];
 }
 
+export interface IDatedAzureArticleData {
+    day: IAzureArticleData;
+    week: IAzureArticleData;
+    month: IAzureArticleData;
+}
+
 export default IAzureArticleData;

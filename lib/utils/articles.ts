@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
-import IArticle from '../../interfaces/IArticle';
-import IAzureArticleData from '../../interfaces/IAzureArticleData';
+import IArticle, { IArticleWithDiffs } from '../../interfaces/IArticle';
+import IArticleDiffs from '../../interfaces/IArticleDiffs';
+import IAzureArticleData, { IDatedAzureArticleData } from '../../interfaces/IAzureArticleData';
 import ICombinedArticleStats from '../../interfaces/ICombinedArticleStats';
 
 export const getPublishedArticles = (articles: IArticle[]) => (
@@ -70,4 +71,50 @@ export const orderMostViewedFirst = (articles: IArticle[]) => {
 export const orderMostReactedFirst = (articles: IArticle[]) => {
     const publishedArticles = getPublishedArticles(articles);
     return publishedArticles.sort((a, b) => a.publicReactionsCount < b.publicReactionsCount ? 1 : -1);
+}
+
+export const getAzureArticleDataDayWeekMonth = (azureData: IAzureArticleData[]) => {
+    const oldestAzureDataAvailable = azureData[azureData.length - 1];
+    const units: dayjs.OpUnitType[] = ['day', 'week', 'month'];
+    const [day, week, month] = units.map((unit) => (
+        // returns the azure data for a day/week/month ago or the oldest azure data
+        azureData.find(({ fetchedAt }) => dayjs().subtract(1, unit).isSame(fetchedAt, 'hour')) || oldestAzureDataAvailable
+    ));
+    return {
+        day,
+        week,
+        month,
+    }
+}
+
+const getDiffsBetweenArticles = (latestArticle: IArticle, olderArticle: IArticle | undefined): IArticleDiffs => {
+    if (!olderArticle) {
+        // if the older article doesn't exist then just return the current counts
+        return {
+            pageViews: latestArticle.pageViewsCount,
+            reactions: latestArticle.publicReactionsCount,
+            comments: latestArticle.commentsCount,
+        }
+    }
+    return {
+        pageViews: latestArticle.pageViewsCount - olderArticle.pageViewsCount,
+        reactions: latestArticle.publicReactionsCount - olderArticle.publicReactionsCount,
+        comments: latestArticle.commentsCount - olderArticle.commentsCount,
+    }
+};
+
+export const getHistorialDiffsForLatestArticles = (latestArticles: IArticle[], datedAzureData: IDatedAzureArticleData) => {
+    return latestArticles.map((article: IArticle): IArticleWithDiffs => {
+        const dayAgoArticle = datedAzureData.day.articles.find(({ id }) => id === article.id);
+        const weekAgoArticle = datedAzureData.week.articles.find(({ id }) => id === article.id);
+        const monthAgoArticle = datedAzureData.month.articles.find(({ id }) => id === article.id);
+        return {
+            ...article,
+            diffs: {
+                day: getDiffsBetweenArticles(article, dayAgoArticle),
+                week: getDiffsBetweenArticles(article, weekAgoArticle),
+                month: getDiffsBetweenArticles(article, monthAgoArticle),
+            }
+        }
+    });
 }

@@ -178,10 +178,10 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
                                         </a>
                                     ))}
                                 </div>
-                                <div className="grid col-span-full grid-cols-1 md:grid-cols-2 text-card-tertiary-color text-xs">
-                                    <div className="flex justify-start md:pr-4 md:col-span-1 mx-1 md:mx-0">
-                                        <div className="flex flex-col md:flex-row items-start md:items-center md:justify-start mr-6">
-                                            <p className="font-medium md:mr-1">24 hours:</p>
+                                <div className="grid col-span-full grid-cols-1 md:grid-cols-3 text-card-tertiary-color text-xs">
+                                    <div className="flex justify-between md:justify-start md:pr-4 md:col-span-2 mx-1 md:mx-0">
+                                        <div className="flex flex-col md:flex-row items-start md:items-center md:justify-start md:mr-4">
+                                            <p className="font-medium md:mr-1">24 hours<span className="hidden md:inline">:</span></p>
                                             <div className="flex flex-row text-xs items-center">
                                                 {[publicReactionsCount, pageViewsCount].map((stat, i: number) => {
                                                     let Icon: IconType;
@@ -197,8 +197,8 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
                                                 })}
                                             </div>
                                         </div>
-                                        <div className="flex flex-col md:flex-row items-start md:items-center justify-start mr-6">
-                                            <p className="font-medium md:mr-1">7 days:</p>
+                                        <div className="flex flex-col md:flex-row items-center md:items-center justify-start md:mr-4">
+                                            <p className="font-medium md:mr-1">7 days<span className="hidden md:inline">:</span></p>
                                             <div className="flex flex-row text-xs items-center">
                                                 {[publicReactionsCount, pageViewsCount].map((stat, i: number) => {
                                                     let Icon: IconType;
@@ -214,8 +214,8 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
                                                 })}
                                             </div>
                                         </div>
-                                        <div className="flex flex-col md:flex-row items-start md:items-center justify-start">
-                                            <p className="font-medium md:mr-1">30 days:</p>
+                                        <div className="flex flex-col md:flex-row items-end md:items-center justify-start">
+                                            <p className="font-medium md:mr-1">30 days<span className="hidden md:inline">:</span></p>
                                             <div className="flex flex-row text-xs items-center">
                                                 {[publicReactionsCount, pageViewsCount].map((stat, i: number) => {
                                                     let Icon: IconType;

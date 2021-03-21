@@ -1,3 +1,5 @@
+const { url } = require("inspector");
+
 module.exports = {
     purge: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
     darkMode: false, // or 'media' or 'class'
@@ -29,6 +31,7 @@ module.exports = {
                 'form-border-color': '#b5bdc4',
                 'form-background-hover': '#3b49df',
                 'link': '#3b49df',
+                'link-gray': 'rgba(8, 9, 10, 0.05)',
                 'indicator-text': '#363d44',
                 'indicator-background': '#d2d6db',
                 'base-border': '#eef0f1',
@@ -42,6 +45,12 @@ module.exports = {
             },
             fontSize: {
                 'devto-h3': '1.17em',
+            },
+            backgroundImage: theme => ({
+                'down-arrow': 'url("/down-arrow.svg")',
+            }),
+            backgroundPosition: {
+                'select': 'calc(100% - 0.5rem) calc(50% - 1px)'
             }
         },
     },

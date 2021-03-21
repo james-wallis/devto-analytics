@@ -3,6 +3,7 @@ import StatRow from './statRow';
 import { IArticleWithDiffs } from '../interfaces/IArticle';
 import IArticleRowStat from '../interfaces/IArticleRowStat';
 import ExternalLink from './externalLink';
+import StatRowDiffContainer from './statRowDiffContainer';
 
 interface IProps {
     title: IArticleWithDiffs['title'];
@@ -56,19 +57,11 @@ const ArticleCard = ({ title, url, publishedAt, publicReactionsCount, commentsCo
             </div>
             <div className="col-span-full flex justify-between md:justify-start ml-1 mr-3 md:mx-0 text-card-tertiary-color text-xs">
                 {[
-                    { text: '24 hours', stats: dayIncreaseStats },
-                    { text: '7 days', stats: weekIncreaseStats },
-                    { text: '30 days', stats: monthIncreaseStats },
-                ].map(({ text, stats }) => (
-                    <div
-                        key={`stat-row-container-${text}`}
-                        className="flex flex-col md:flex-row items-start md:items-center md:justify-start md:mr-4"
-                    >
-                        <p className="font-medium md:mr-1">{text}<span className="hidden md:inline">:</span></p>
-                        <div className="flex flex-row text-xs items-center">
-                            <StatRow stats={stats} small keyPrefix={text} />
-                        </div>
-                    </div>
+                    { text: '24 hours', stats: dayIncreaseStats, position: 'left' },
+                    { text: '7 days', stats: weekIncreaseStats, position: 'center' },
+                    { text: '30 days', stats: monthIncreaseStats, position: 'right' },
+                ].map(({ text, stats, position }) => (
+                    <StatRowDiffContainer text={text} stats={stats} position={position as 'left' | 'center' | 'right'} />
                 ))}
             </div>
         </div>

@@ -1,13 +1,5 @@
-import dayjs from 'dayjs';
 import IArticle, { IArticleWithDiffs } from '../../interfaces/IArticle';
-import IAzureArticleData from '../../interfaces/IAzureArticleData';
 import { DiffTypes } from '../../types';
-
-export const latestAzureArticleDataFirst = (article1: IAzureArticleData, article2: IAzureArticleData) => (
-    dayjs(article1.fetchedAt).isBefore(article2.fetchedAt, 'hour') ? 1 : -1
-);
-
-
 
 const mostViewsFirst = (article1: IArticle | IArticleWithDiffs, article2: IArticle | IArticleWithDiffs, diffType?: DiffTypes | '') => {
     if (diffType) {

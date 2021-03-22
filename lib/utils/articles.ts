@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import IArticle, { IArticleWithDiffs } from '../../interfaces/IArticle';
 import IArticleDiffs from '../../interfaces/IArticleDiffs';
-import IAzureArticleData, { IDatedAzureArticleData } from '../../interfaces/IAzureArticleData';
+import IAzureArticleData, { IAzureArticleObject } from '../../interfaces/IAzureArticleData';
 import ICombinedArticleStats from '../../interfaces/ICombinedArticleStats';
 
 export const getPublishedArticles = (articles: IArticle[]) => (
@@ -33,21 +33,10 @@ export const getArticlesPublishedSince = (range: dayjs.OpUnitType, published: bo
     published && publishedAt && dayjs().subtract(1, range).hour(0).isBefore(publishedAt)
 )
 
-export const getHistoricalArticleDataForOverview = (azureData: IAzureArticleData[], latestArticles: IArticle[]) => {
-    const sortedLatestArticleFirst = azureData.sort((a, b) => dayjs(a.fetchedAt).isBefore(b.fetchedAt, 'hour') ? 1 : -1);
-    const oldestAzureDataAvailable = sortedLatestArticleFirst[sortedLatestArticleFirst.length - 1];
-
-    const ranges: dayjs.OpUnitType[] = ['day', 'week', 'month'];
-    const [dayAgoDiff, weekAgoDiff, monthAgoDiff] = ranges.map((range: dayjs.OpUnitType): ICombinedArticleStats => {
-        const azureDataWithinRange = sortedLatestArticleFirst.find((data) => dayjs().subtract(1, range).isSame(data.fetchedAt, 'hour')) || oldestAzureDataAvailable;
-        const articleDiffInRange = getCombinedCountDiffBetweenArticles(azureDataWithinRange.articles, latestArticles);
-
-        // Use latestArticles to get amount of articles published since the range start
-        const publishedPostsSinceRangeStart = latestArticles.filter(({ published, publishedAt }) => getArticlesPublishedSince(range, published, publishedAt));
-        return {
-            ...articleDiffInRange,
-            publishedPosts: publishedPostsSinceRangeStart.length,
-        }
+export const getHistoricalArticleDataForOverview = (azureData: IAzureArticleData, latestArticles: IArticle[]) => {
+    const { day, week, month } = azureData;
+    const [dayAgoDiff, weekAgoDiff, monthAgoDiff] = [day, week, month].map((azureArticleObject: IAzureArticleObject): ICombinedArticleStats => {
+        return getCombinedCountDiffBetweenArticles(azureArticleObject.articles, latestArticles);
     });
 
     return {
@@ -73,20 +62,6 @@ export const orderMostReactedFirst = (articles: IArticle[]) => {
     return publishedArticles.sort((a, b) => a.publicReactionsCount < b.publicReactionsCount ? 1 : -1);
 }
 
-export const getAzureArticleDataDayWeekMonth = (azureData: IAzureArticleData[]) => {
-    const oldestAzureDataAvailable = azureData[azureData.length - 1];
-    const units: dayjs.OpUnitType[] = ['day', 'week', 'month'];
-    const [day, week, month] = units.map((unit) => (
-        // returns the azure data for a day/week/month ago or the oldest azure data
-        azureData.find(({ fetchedAt }) => dayjs().subtract(1, unit).isSame(fetchedAt, 'hour')) || oldestAzureDataAvailable
-    ));
-    return {
-        day,
-        week,
-        month,
-    }
-}
-
 const getDiffsBetweenArticles = (latestArticle: IArticle, olderArticle: IArticle | undefined): IArticleDiffs => {
     if (!olderArticle) {
         // if the older article doesn't exist then just return the current counts
@@ -103,7 +78,7 @@ const getDiffsBetweenArticles = (latestArticle: IArticle, olderArticle: IArticle
     }
 };
 
-export const getHistorialDiffsForLatestArticles = (latestArticles: IArticle[], datedAzureData: IDatedAzureArticleData) => {
+export const getHistorialDiffsForLatestArticles = (latestArticles: IArticle[], datedAzureData: IAzureArticleData) => {
     return latestArticles.map((article: IArticle): IArticleWithDiffs => {
         const dayAgoArticle = datedAzureData.day.articles.find(({ id }) => id === article.id);
         const weekAgoArticle = datedAzureData.week.articles.find(({ id }) => id === article.id);

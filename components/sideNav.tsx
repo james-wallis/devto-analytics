@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { getPageLinks } from '../lib/navigation';
 
 interface IProps {
     numArticles: number;
@@ -8,15 +9,12 @@ interface IProps {
 const SideNav = ({ numArticles, active }: IProps) => (
     <aside>
         <nav className="hidden md:block">
-            {[
-                { text: 'Posts', type: 'posts', href: '/', value: numArticles },
-                { text: 'Graphs', type: 'graphs', href: '/graphs', value: 4 },
-            ].map(({ text, type, href, value }) => (
+            {getPageLinks(numArticles, 4).map(({ text, href, value, flairValue }) => (
                 <Link key={`side-nav-${href}`} href={href}>
                     <a
                         className={`
                             p-3 sm:p-2 flex items-center rounded-devto w-full hover:text-link transition-colors
-                            ${active === type ? 'bg-white font-medium' : 'hover:bg-link-gray'}
+                            ${active === value ? 'bg-white font-medium' : 'hover:bg-link-gray'}
                         `}
                     >
                         {text}
@@ -26,7 +24,7 @@ const SideNav = ({ numArticles, active }: IProps) => (
                                 text-indicator-text border border-indicator-background
                             "
                         >
-                            {value}
+                            {flairValue}
                         </span>
                     </a>
                 </Link>

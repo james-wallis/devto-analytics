@@ -14,7 +14,6 @@ import IFollower from '../interfaces/IFollower';
 import IUser from '../interfaces/IUser';
 import { getAzureArticleData, getAzureFollowerData } from '../lib/azure';
 import { getArticles, getFollowers, getUser } from '../lib/devto';
-import { latestAzureArticleDataFirst } from '../lib/utils/sorting';
 
 // Add .fromNow (relative times)
 dayjs.extend(relativeTime)
@@ -72,7 +71,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
     return {
         props: {
-            azureArticleData: azureArticleData.sort(latestAzureArticleDataFirst),
+            azureArticleData,
             latestArticles,
             azureFollowerData,
             latestFollowers,

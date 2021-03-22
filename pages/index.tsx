@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import ArticleCard from '../components/articleCard';
 
@@ -9,7 +10,7 @@ import Select from '../components/select';
 import SideNav from '../components/sideNav';
 import StatGrid from '../components/statGrid';
 import IArticle, { IArticleWithDiffs } from '../interfaces/IArticle';
-import IAzureArticleData, { IDatedAzureArticleData } from '../interfaces/IAzureArticleData';
+import IAzureArticleData from '../interfaces/IAzureArticleData';
 import IAzureFollowerData from '../interfaces/IAzureFollowerData';
 import ICombinedArticleStats from '../interfaces/ICombinedArticleStats';
 import IFollower from '../interfaces/IFollower';
@@ -20,19 +21,20 @@ import ISelectOption from '../interfaces/ISelectOption';
 import IUser from '../interfaces/IUser';
 import { getAzureArticleData, getAzureFollowerData } from '../lib/azure';
 import { getArticles, getFollowers, getUser } from '../lib/devto';
-import { getAzureArticleDataDayWeekMonth, getCombinedArticleViewsReactionsComments, getHistorialDiffsForLatestArticles, getHistoricalArticleDataForOverview, getLatestPublishedArticle, getPublishedArticles } from '../lib/utils/articles';
+import { changePage, getPageLinks } from '../lib/navigation';
+import { getCombinedArticleViewsReactionsComments, getHistorialDiffsForLatestArticles, getHistoricalArticleDataForOverview, getLatestPublishedArticle, getPublishedArticles } from '../lib/utils/articles';
 import { getHistoricalFollowerDataForOverview } from '../lib/utils/followers';
 import { getOverviewStats } from '../lib/utils/overview';
-import { latestAzureArticleDataFirst, sortArticlesWithDiff } from '../lib/utils/sorting';
+import { sortArticlesWithDiff } from '../lib/utils/sorting';
 import { DiffTypes } from '../types';
 
 // Add .fromNow (relative times)
 dayjs.extend(relativeTime)
 
 interface IProps {
-    azureArticleData: IAzureArticleData[];
+    azureArticleData: IAzureArticleData;
     latestArticles: IArticle[];
-    azureFollowerData: IAzureFollowerData[];
+    azureFollowerData: IAzureFollowerData;
     latestFollowers: IFollower[];
     user: IUser;
 }
@@ -60,10 +62,8 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
 
     const latestArticle = getLatestPublishedArticle(publishedArticles);
 
-    const azureArticleDataByDate: IDatedAzureArticleData = getAzureArticleDataDayWeekMonth(azureArticleData);
-
     // Add the day, week, month diffs into the latestArticles
-    const latestArticlesWithDiffs: IArticleWithDiffs[] = getHistorialDiffsForLatestArticles(publishedArticles, azureArticleDataByDate);
+    const latestArticlesWithDiffs: IArticleWithDiffs[] = getHistorialDiffsForLatestArticles(publishedArticles, azureArticleData);
 
     const latestCombinedArticleStats: ICombinedArticleStats = getCombinedArticleViewsReactionsComments(latestArticles);
 
@@ -75,21 +75,25 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
     );
 
     const sortedArticles: IArticleWithDiffs[] = sortArticlesWithDiff(latestArticlesWithDiffs, articleSortingOrder, diffSortingOrder as DiffTypes | '');
+
+    const pageLinks = getPageLinks(publishedArticles.length, 4);
+    const router = useRouter();
     return (
         <Layout title="Analytics Dashboard" user={user}>
-            <div className="pb-4 px-2 lg:px-4">
-                <h1 className="text-2xl md:text-3xl my-2 lg:my-4 font-bold leading-normal md:leading-normal">Dashboard</h1>
+            <div className="pb-2 md:pb-4 px-2 lg:px-4 grid gap-2 md:gap-4 grid-cols-1">
+                <h1 className="text-2xl md:text-3xl mt-2 lg:mt-4 font-bold leading-normal md:leading-normal">Dashboard</h1>
+                <Select options={pageLinks} className="md:hidden" onChange={(e) => changePage(e.target.value, pageLinks, router)}/>
                 <StatGrid stats={overviewStats} />
             </div>
-            <div className="grid md:grid-cols-5 md:p-4 gap-4">
+            <div className="grid md:grid-cols-5 md:p-4 gap-2 md:gap-4">
                 <SideNav active="posts" numArticles={latestArticles.length} />
                 <div className="col-span-1 md:col-span-4">
                     <div className="flex flex-row justify-between mb-3 items-center leading-loose">
                         <h2 className="hidden md:block text-xl font-bold">Posts</h2>
                         <div className="flex flex-row md:flex-row-reverse">
-                            <Select options={articleSelectOpts} onChange={(e) => setArticleSortingOrder(e.target.value)}/>
+                            <Select options={articleSelectOpts} className="ml-2 md:ml-4 my-1" onChange={(e) => setArticleSortingOrder(e.target.value)}/>
                             {articleSortingOrder !== articleSelectOpts[0].value && (
-                                <Select options={diffSelectionOpts} onChange={(e) => setDiffSortingOrder(e.target.value)}/>
+                                <Select options={diffSelectionOpts} className="ml-2 md:ml-4 my-1" onChange={(e) => setDiffSortingOrder(e.target.value)}/>
                             )}
                         </div>
                     </div>
@@ -134,7 +138,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
     return {
         props: {
-            azureArticleData: azureArticleData.sort(latestAzureArticleDataFirst),
+            azureArticleData,
             latestArticles,
             azureFollowerData,
             latestFollowers,

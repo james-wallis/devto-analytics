@@ -1,6 +1,6 @@
 import IArticle from '../../interfaces/IArticle';
-import IAzureArticleData from '../../interfaces/IAzureArticleData';
-import IAzureFollowerData from '../../interfaces/IAzureFollowerData';
+import IAzureArticleData, { IAzureArticleObject } from '../../interfaces/IAzureArticleData';
+import IAzureFollowerData, { IAzureFollowerObject } from '../../interfaces/IAzureFollowerData';
 import IFollower from '../../interfaces/IFollower';
 
 export const parseArticle = (data: any): IArticle => ({
@@ -18,19 +18,33 @@ export const parseArticle = (data: any): IArticle => ({
     tags: data.tag_list,
 });
 
-export const parseAzureArticleData = (data: any): IAzureArticleData => ({
-    fetchedAt: data.fetchedAt,
-    count: data.count,
-    articles: data.articles.map(parseArticle),
-});
+export const parseAzureArticleData = (data: any): IAzureArticleData => {
+    const [day, week, month] = ['dayAgo', 'weekAgo', 'monthAgo'].map((key): IAzureArticleObject => ({
+        fetchedAt: data[key].fetchedAt,
+        count: data[key].count,
+        articles: data[key].articles.map(parseArticle),
+    }));
+    return {
+        day,
+        week,
+        month,
+    }
+};
 
 export const parseFollower = (item: any): IFollower => ({
     id: item.id,
     username: item.username
 });
 
-export const parseAzureFollowerData = (data: any): IAzureFollowerData => ({
-    fetchedAt: data.fetchedAt,
-    count: data.count,
-    followers: data.followers && data.followers.length > 0 ? data.followers.map(parseFollower) : [],
-});
+export const parseAzureFollowerData = (data: any): IAzureFollowerData => {
+    const [day, week, month] = ['dayAgo', 'weekAgo', 'monthAgo'].map((key): IAzureFollowerObject => ({
+        fetchedAt: data[key].fetchedAt,
+        count: data[key].count,
+        followers: data[key].followers && data[key].followers.length > 0 ? data[key].followers.map(parseFollower) : [],
+    }));
+    return {
+        day,
+        week,
+        month,
+    }
+};

@@ -1,4 +1,4 @@
 export interface IViewIncreaseGraph {
-    date: string;
-    increase: number;
+    date: string
+    increase: number
 }

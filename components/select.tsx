@@ -1,10 +1,10 @@
-import { ChangeEvent } from 'react';
-import ISelectOption from '../interfaces/ISelectOption';
+import { ChangeEvent } from 'react'
+import ISelectOption from '../interfaces/ISelectOption'
 
 interface IProps {
-    options: ISelectOption[];
-    onChange: (e: ChangeEvent<HTMLSelectElement>) => void;
-    className?: string;
+    options: ISelectOption[]
+    onChange: (e: ChangeEvent<HTMLSelectElement>) => void
+    className?: string
 }
 
 const Select = ({ options, onChange, className = '' }: IProps): JSX.Element => (
@@ -18,12 +18,12 @@ const Select = ({ options, onChange, className = '' }: IProps): JSX.Element => (
             ${className}
         `}
     >
-        {
-            options.map(({ text, value }) => (
-                <option key={value} value={value}>{text}</option>
-            ))
-        }
+        {options.map(({ text, value }) => (
+            <option key={value} value={value}>
+                {text}
+            </option>
+        ))}
     </select>
 )
 
-export default Select;
+export default Select

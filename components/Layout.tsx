@@ -4,9 +4,9 @@ import Header from './header'
 import IUser from '../interfaces/IUser'
 
 interface IProps {
-    children?: ReactNode;
-    title?: string;
-    user: IUser;
+    children?: ReactNode
+    title?: string
+    user: IUser
 }
 
 const Layout = ({ children, title = 'This is the default title', user }: IProps): JSX.Element => (
@@ -17,12 +17,8 @@ const Layout = ({ children, title = 'This is the default title', user }: IProps)
             <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         </Head>
         <Header user={user} />
-        <main className="max-w-site m-auto">
-            {children}
-        </main>
-        <footer className="h-36 flex items-end justify-center mb-6">
-
-        </footer>
+        <main className="max-w-site m-auto">{children}</main>
+        <footer className="h-36 flex items-end justify-center mb-6"></footer>
     </div>
 )
 

@@ -1,8 +1,8 @@
-import ISelectOption from './ISelectOption';
+import ISelectOption from './ISelectOption'
 
 interface IPageLink extends ISelectOption {
-    href: string;
-    flairValue: number;
+    href: string
+    flairValue: number
 }
 
-export default IPageLink;
+export default IPageLink

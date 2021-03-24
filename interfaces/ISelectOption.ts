@@ -1,6 +1,6 @@
 interface ISelectOption {
-    text: string;
-    value: string;
+    text: string
+    value: string
 }
 
-export default ISelectOption;
+export default ISelectOption

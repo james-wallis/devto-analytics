@@ -1,5 +1,5 @@
 interface ICombinedFollowerStats {
-    followers: number;
+    followers: number
 }
 
-export default ICombinedFollowerStats;
+export default ICombinedFollowerStats

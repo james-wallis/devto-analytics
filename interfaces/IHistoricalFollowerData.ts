@@ -1,9 +1,9 @@
-import ICombinedFollowerStats from "./ICombinedFollowerStats";
+import ICombinedFollowerStats from './ICombinedFollowerStats'
 
 interface IHistoricalFollowerData {
-    day: ICombinedFollowerStats;
-    week: ICombinedFollowerStats;
-    month: ICombinedFollowerStats;
+    day: ICombinedFollowerStats
+    week: ICombinedFollowerStats
+    month: ICombinedFollowerStats
 }
 
-export default IHistoricalFollowerData;
+export default IHistoricalFollowerData

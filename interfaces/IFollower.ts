@@ -1,6 +1,6 @@
 interface IFollower {
-    id: string;
-    username: string;
+    id: string
+    username: string
 }
 
-export default IFollower;
+export default IFollower

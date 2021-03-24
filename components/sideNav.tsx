@@ -1,9 +1,9 @@
-import Link from 'next/link';
-import { getPageLinks } from '../lib/navigation';
+import Link from 'next/link'
+import { getPageLinks } from '../lib/navigation'
 
 interface IProps {
-    numArticles: number;
-    active: 'posts' | 'graphs';
+    numArticles: number
+    active: 'posts' | 'graphs'
 }
 
 const SideNav = ({ numArticles, active }: IProps): JSX.Element => (
@@ -33,4 +33,4 @@ const SideNav = ({ numArticles, active }: IProps): JSX.Element => (
     </aside>
 )
 
-export default SideNav;
+export default SideNav

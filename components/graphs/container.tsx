@@ -1,8 +1,8 @@
 // import dayjs from 'dayjs';
-import IArticle from '../../interfaces/IArticle';
-import IAzureArticleData from '../../interfaces/IAzureArticleData';
-import IAzureFollowerData from '../../interfaces/IAzureFollowerData';
-import IFollower from '../../interfaces/IFollower';
+import IArticle from '../../interfaces/IArticle'
+import IAzureArticleData from '../../interfaces/IAzureArticleData'
+import IAzureFollowerData from '../../interfaces/IAzureFollowerData'
+import IFollower from '../../interfaces/IFollower'
 // import IGraphArticleData from '../../interfaces/IGraphArticleData';
 // import IGraphFollowerData from '../../interfaces/IGraphFollowerData';
 // import { getCombinedArticleViewsReactionsComments } from '../../lib/utils/articles';
@@ -11,10 +11,10 @@ import IFollower from '../../interfaces/IFollower';
 // import FollowerStat from './followerStat';
 
 interface IProps {
-    azureArticleData: IAzureArticleData[];
-    latestArticles: IArticle[];
-    azureFollowerData: IAzureFollowerData[];
-    latestFollowers: IFollower[];
+    azureArticleData: IAzureArticleData[]
+    latestArticles: IArticle[]
+    azureFollowerData: IAzureFollowerData[]
+    latestFollowers: IFollower[]
 }
 
 const GraphContainer = ({}: IProps): JSX.Element => {
@@ -29,7 +29,6 @@ const GraphContainer = ({}: IProps): JSX.Element => {
     //     followersCount: count,
     // }));
 
-
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
             {/* <ArticleStatViewReaction title="Post view difference" data={articleData} daily />
@@ -41,4 +40,4 @@ const GraphContainer = ({}: IProps): JSX.Element => {
     )
 }
 
-export default GraphContainer;
+export default GraphContainer

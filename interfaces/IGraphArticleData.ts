@@ -1,7 +1,7 @@
-import ICombinedArticleStats from "./ICombinedArticleStats";
+import ICombinedArticleStats from './ICombinedArticleStats'
 
 interface IGraphArticleData extends ICombinedArticleStats {
-    fetchedAt: string;
+    fetchedAt: string
 }
 
-export default IGraphArticleData;
+export default IGraphArticleData

@@ -1,7 +1,7 @@
 interface IArticleDiffs {
-    pageViews: number;
-    reactions: number;
-    comments: number;
+    pageViews: number
+    reactions: number
+    comments: number
 }
 
-export default IArticleDiffs;
+export default IArticleDiffs

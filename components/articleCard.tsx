@@ -1,40 +1,55 @@
-import dayjs from 'dayjs';
-import StatRow from './statRow';
-import { IArticleWithDiffs } from '../interfaces/IArticle';
-import IArticleRowStat from '../interfaces/IArticleRowStat';
-import ExternalLink from './externalLink';
-import StatRowDiffContainer from './statRowDiffContainer';
+import dayjs from 'dayjs'
+import StatRow from './statRow'
+import { IArticleWithDiffs } from '../interfaces/IArticle'
+import IArticleRowStat from '../interfaces/IArticleRowStat'
+import ExternalLink from './externalLink'
+import StatRowDiffContainer from './statRowDiffContainer'
 
 interface IProps {
-    title: IArticleWithDiffs['title'];
-    url: IArticleWithDiffs['url'];
-    publishedAt: IArticleWithDiffs['publishedAt'];
-    publicReactionsCount: IArticleWithDiffs['publicReactionsCount'];
-    commentsCount: IArticleWithDiffs['commentsCount'];
-    pageViewsCount: IArticleWithDiffs['pageViewsCount'];
-    diffs: IArticleWithDiffs['diffs'];
-    border: boolean;
+    title: IArticleWithDiffs['title']
+    url: IArticleWithDiffs['url']
+    publishedAt: IArticleWithDiffs['publishedAt']
+    publicReactionsCount: IArticleWithDiffs['publicReactionsCount']
+    commentsCount: IArticleWithDiffs['commentsCount']
+    pageViewsCount: IArticleWithDiffs['pageViewsCount']
+    diffs: IArticleWithDiffs['diffs']
+    border: boolean
 }
 
-const ArticleCard = ({ title, url, publishedAt, publicReactionsCount, commentsCount, pageViewsCount, diffs, border }: IProps): JSX.Element => {
+const ArticleCard = ({
+    title,
+    url,
+    publishedAt,
+    publicReactionsCount,
+    commentsCount,
+    pageViewsCount,
+    diffs,
+    border,
+}: IProps): JSX.Element => {
     const mainStats: IArticleRowStat[] = [
         { value: publicReactionsCount, type: 'reaction' },
         { value: commentsCount, type: 'comment' },
         { value: pageViewsCount, type: 'view' },
     ]
 
-    const diffsAsArr = [diffs.day, diffs.week, diffs.month];
-    const [dayIncreaseStats, weekIncreaseStats, monthIncreaseStats]: IArticleRowStat[][] = diffsAsArr.map(({ reactions, pageViews }): IArticleRowStat[] => ([
+    const diffsAsArr = [diffs.day, diffs.week, diffs.month]
+    const [
+        dayIncreaseStats,
+        weekIncreaseStats,
+        monthIncreaseStats,
+    ]: IArticleRowStat[][] = diffsAsArr.map(({ reactions, pageViews }): IArticleRowStat[] => [
         { value: reactions, type: 'reaction' },
         { value: pageViews, type: 'view' },
-    ]));
+    ])
     return (
-        <div className={`grid grid-cols-2 md:grid-cols-4 gap-2 items-center p-4 ${border ? 'border-t border-base-border' : ''}`}>
+        <div
+            className={`grid grid-cols-2 md:grid-cols-4 gap-2 items-center p-4 ${
+                border ? 'border-t border-base-border' : ''
+            }`}
+        >
             <div className="col-span-2">
                 <h3 className="flex items-center text-link font-bold text-devto-h3">
-                    <ExternalLink href={url}>
-                        {title}
-                    </ExternalLink>
+                    <ExternalLink href={url}>{title}</ExternalLink>
                 </h3>
                 <p className="text-sm text-card-tertiary-color">
                     <strong className="font-medium mr-1">Published:</strong>
@@ -61,11 +76,16 @@ const ArticleCard = ({ title, url, publishedAt, publicReactionsCount, commentsCo
                     { text: '7 days', stats: weekIncreaseStats, position: 'center' },
                     { text: '30 days', stats: monthIncreaseStats, position: 'right' },
                 ].map(({ text, stats, position }) => (
-                    <StatRowDiffContainer key={`stat-container-${text}`} text={text} stats={stats} position={position as 'left' | 'center' | 'right'} />
+                    <StatRowDiffContainer
+                        key={`stat-container-${text}`}
+                        text={text}
+                        stats={stats}
+                        position={position as 'left' | 'center' | 'right'}
+                    />
                 ))}
             </div>
         </div>
     )
 }
 
-export default ArticleCard;
+export default ArticleCard

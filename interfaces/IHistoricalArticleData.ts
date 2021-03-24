@@ -1,9 +1,9 @@
-import ICombinedArticleStats from "./ICombinedArticleStats";
+import ICombinedArticleStats from './ICombinedArticleStats'
 
 interface IHistoricalArticleData {
-    day: ICombinedArticleStats;
-    week: ICombinedArticleStats;
-    month: ICombinedArticleStats;
+    day: ICombinedArticleStats
+    week: ICombinedArticleStats
+    month: ICombinedArticleStats
 }
 
-export default IHistoricalArticleData;
+export default IHistoricalArticleData

@@ -1,4 +1,4 @@
-import IArticleDiffs from './IArticleDiffs';
+import IArticleDiffs from './IArticleDiffs'
 
 interface IArticle {
     id: number
@@ -17,10 +17,10 @@ interface IArticle {
 
 export interface IArticleWithDiffs extends IArticle {
     diffs: {
-        day: IArticleDiffs;
-        week: IArticleDiffs;
-        month: IArticleDiffs;
+        day: IArticleDiffs
+        week: IArticleDiffs
+        month: IArticleDiffs
     }
 }
 
-export default IArticle;
+export default IArticle

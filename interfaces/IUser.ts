@@ -1,9 +1,9 @@
 interface IUser {
-    username: string;
-    name: string;
-    image: string;
-    websiteUrl: string;
-    devToUrl: string;
+    username: string
+    name: string
+    image: string
+    websiteUrl: string
+    devToUrl: string
 }
 
-export default IUser;
+export default IUser

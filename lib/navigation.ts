@@ -1,5 +1,5 @@
 import { NextRouter } from 'next/router'
-import IPageLink from '../interfaces/IPageLink';
+import IPageLink from '../interfaces/IPageLink'
 
 export const getPageLinks = (numArticles: number, numGraphs: number): IPageLink[] => {
     return [
@@ -9,8 +9,8 @@ export const getPageLinks = (numArticles: number, numGraphs: number): IPageLink[
 }
 
 export const changePage = (value: string, links: IPageLink[], router: NextRouter): void => {
-    const link = links.find((link) => link.value === value);
+    const link = links.find((link) => link.value === value)
     if (link) {
-        router.push(link.href);
+        router.push(link.href)
     }
 }

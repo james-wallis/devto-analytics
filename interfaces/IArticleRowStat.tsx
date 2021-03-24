@@ -1,6 +1,6 @@
 interface IArticleRowStat {
-    value: number;
-    type: 'reaction' | 'comment' | 'view';
+    value: number
+    type: 'reaction' | 'comment' | 'view'
 }
 
-export default IArticleRowStat;
+export default IArticleRowStat

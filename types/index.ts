@@ -1,1 +1,1 @@
-export type DiffTypes = 'day' | 'week' | 'month';
+export type DiffTypes = 'day' | 'week' | 'month'

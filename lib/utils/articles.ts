@@ -1,26 +1,43 @@
-import dayjs from 'dayjs';
-import IArticle, { IArticleWithDiffs } from '../../interfaces/IArticle';
-import IArticleDiffs from '../../interfaces/IArticleDiffs';
-import IAzureArticleData, { IAzureArticleObject } from '../../interfaces/IAzureArticleData';
-import ICombinedArticleStats from '../../interfaces/ICombinedArticleStats';
+import dayjs from 'dayjs'
+import IArticle, { IArticleWithDiffs } from '../../interfaces/IArticle'
+import IArticleDiffs from '../../interfaces/IArticleDiffs'
+import IAzureArticleData, { IAzureArticleObject } from '../../interfaces/IAzureArticleData'
+import ICombinedArticleStats from '../../interfaces/ICombinedArticleStats'
 
-export const getPublishedArticles = (articles: IArticle[]): IArticle[] => (
+export const getPublishedArticles = (articles: IArticle[]): IArticle[] =>
     articles.filter(({ published }) => published)
-)
 
-export const getCombinedArticleViewsReactionsComments = (articles: IArticle[]): ICombinedArticleStats => {
+export const getCombinedArticleViewsReactionsComments = (
+    articles: IArticle[]
+): ICombinedArticleStats => {
     const combinedArticleStats: ICombinedArticleStats = {
-        views: articles.reduce((count: number, { pageViewsCount }: IArticle) => pageViewsCount + count, 0),
-        reactions: articles.reduce((count: number, { publicReactionsCount }: IArticle) => publicReactionsCount + count, 0),
-        comments: articles.reduce((count: number, { commentsCount }: IArticle) => commentsCount + count, 0),
+        views: articles.reduce(
+            (count: number, { pageViewsCount }: IArticle) => pageViewsCount + count,
+            0
+        ),
+        reactions: articles.reduce(
+            (count: number, { publicReactionsCount }: IArticle) => publicReactionsCount + count,
+            0
+        ),
+        comments: articles.reduce(
+            (count: number, { commentsCount }: IArticle) => commentsCount + count,
+            0
+        ),
         publishedPosts: getPublishedArticles(articles).length,
     }
-    return combinedArticleStats;
+    return combinedArticleStats
 }
 
-export const getCombinedCountDiffBetweenArticles = (olderArticles: IArticle[], newerArticles: IArticle[]): ICombinedArticleStats => {
-    const olderArticleStats: ICombinedArticleStats = getCombinedArticleViewsReactionsComments(olderArticles);
-    const newerArticleStats: ICombinedArticleStats = getCombinedArticleViewsReactionsComments(newerArticles);
+export const getCombinedCountDiffBetweenArticles = (
+    olderArticles: IArticle[],
+    newerArticles: IArticle[]
+): ICombinedArticleStats => {
+    const olderArticleStats: ICombinedArticleStats = getCombinedArticleViewsReactionsComments(
+        olderArticles
+    )
+    const newerArticleStats: ICombinedArticleStats = getCombinedArticleViewsReactionsComments(
+        newerArticles
+    )
     return {
         views: newerArticleStats.views - olderArticleStats.views,
         reactions: newerArticleStats.reactions - olderArticleStats.reactions,
@@ -29,15 +46,23 @@ export const getCombinedCountDiffBetweenArticles = (olderArticles: IArticle[], n
     }
 }
 
-export const getArticlesPublishedSince = (range: dayjs.OpUnitType, published: boolean, publishedAt: string): boolean => (
+export const getArticlesPublishedSince = (
+    range: dayjs.OpUnitType,
+    published: boolean,
+    publishedAt: string
+): boolean =>
     !!published && !!publishedAt && dayjs().subtract(1, range).hour(0).isBefore(publishedAt)
-)
 
-export const getHistoricalArticleDataForOverview = (azureData: IAzureArticleData, latestArticles: IArticle[]) => {
-    const { day, week, month } = azureData;
-    const [dayAgoDiff, weekAgoDiff, monthAgoDiff] = [day, week, month].map((azureArticleObject: IAzureArticleObject): ICombinedArticleStats => {
-        return getCombinedCountDiffBetweenArticles(azureArticleObject.articles, latestArticles);
-    });
+export const getHistoricalArticleDataForOverview = (
+    azureData: IAzureArticleData,
+    latestArticles: IArticle[]
+) => {
+    const { day, week, month } = azureData
+    const [dayAgoDiff, weekAgoDiff, monthAgoDiff] = [day, week, month].map(
+        (azureArticleObject: IAzureArticleObject): ICombinedArticleStats => {
+            return getCombinedCountDiffBetweenArticles(azureArticleObject.articles, latestArticles)
+        }
+    )
 
     return {
         day: dayAgoDiff,
@@ -47,22 +72,29 @@ export const getHistoricalArticleDataForOverview = (azureData: IAzureArticleData
 }
 
 export const getLatestPublishedArticle = (articles: IArticle[]): IArticle => {
-    const publishedArticles = getPublishedArticles(articles);
-    const [latestArticle] = publishedArticles.sort((a, b) => dayjs(a.publishedAt).isBefore(b.publishedAt) ? 1 : -1);
-    return latestArticle;
+    const publishedArticles = getPublishedArticles(articles)
+    const [latestArticle] = publishedArticles.sort((a, b) =>
+        dayjs(a.publishedAt).isBefore(b.publishedAt) ? 1 : -1
+    )
+    return latestArticle
 }
 
 export const orderMostViewedFirst = (articles: IArticle[]): IArticle[] => {
-    const publishedArticles = getPublishedArticles(articles);
-    return publishedArticles.sort((a, b) => a.pageViewsCount < b.pageViewsCount ? 1 : -1);
+    const publishedArticles = getPublishedArticles(articles)
+    return publishedArticles.sort((a, b) => (a.pageViewsCount < b.pageViewsCount ? 1 : -1))
 }
 
 export const orderMostReactedFirst = (articles: IArticle[]): IArticle[] => {
-    const publishedArticles = getPublishedArticles(articles);
-    return publishedArticles.sort((a, b) => a.publicReactionsCount < b.publicReactionsCount ? 1 : -1);
+    const publishedArticles = getPublishedArticles(articles)
+    return publishedArticles.sort((a, b) =>
+        a.publicReactionsCount < b.publicReactionsCount ? 1 : -1
+    )
 }
 
-const getDiffsBetweenArticles = (latestArticle: IArticle, olderArticle: IArticle | undefined): IArticleDiffs => {
+const getDiffsBetweenArticles = (
+    latestArticle: IArticle,
+    olderArticle: IArticle | undefined
+): IArticleDiffs => {
     if (!olderArticle) {
         // if the older article doesn't exist then just return the current counts
         return {
@@ -76,20 +108,27 @@ const getDiffsBetweenArticles = (latestArticle: IArticle, olderArticle: IArticle
         reactions: latestArticle.publicReactionsCount - olderArticle.publicReactionsCount,
         comments: latestArticle.commentsCount - olderArticle.commentsCount,
     }
-};
+}
 
-export const getHistorialDiffsForLatestArticles = (latestArticles: IArticle[], datedAzureData: IAzureArticleData): IArticleWithDiffs[] => {
-    return latestArticles.map((article: IArticle): IArticleWithDiffs => {
-        const dayAgoArticle = datedAzureData.day.articles.find(({ id }) => id === article.id);
-        const weekAgoArticle = datedAzureData.week.articles.find(({ id }) => id === article.id);
-        const monthAgoArticle = datedAzureData.month.articles.find(({ id }) => id === article.id);
-        return {
-            ...article,
-            diffs: {
-                day: getDiffsBetweenArticles(article, dayAgoArticle),
-                week: getDiffsBetweenArticles(article, weekAgoArticle),
-                month: getDiffsBetweenArticles(article, monthAgoArticle),
+export const getHistorialDiffsForLatestArticles = (
+    latestArticles: IArticle[],
+    datedAzureData: IAzureArticleData
+): IArticleWithDiffs[] => {
+    return latestArticles.map(
+        (article: IArticle): IArticleWithDiffs => {
+            const dayAgoArticle = datedAzureData.day.articles.find(({ id }) => id === article.id)
+            const weekAgoArticle = datedAzureData.week.articles.find(({ id }) => id === article.id)
+            const monthAgoArticle = datedAzureData.month.articles.find(
+                ({ id }) => id === article.id
+            )
+            return {
+                ...article,
+                diffs: {
+                    day: getDiffsBetweenArticles(article, dayAgoArticle),
+                    week: getDiffsBetweenArticles(article, weekAgoArticle),
+                    month: getDiffsBetweenArticles(article, monthAgoArticle),
+                },
             }
         }
-    });
+    )
 }

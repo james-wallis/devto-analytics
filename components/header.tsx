@@ -1,9 +1,9 @@
-import { FiGithub, FiHelpCircle } from 'react-icons/fi';
-import Link from 'next/link';
-import IUser from '../interfaces/IUser';
+import { FiGithub, FiHelpCircle } from 'react-icons/fi'
+import Link from 'next/link'
+import IUser from '../interfaces/IUser'
 
 interface IProps {
-    user: IUser;
+    user: IUser
 }
 
 const Header = ({ user }: IProps): JSX.Element => (
@@ -11,7 +11,11 @@ const Header = ({ user }: IProps): JSX.Element => (
         <div className="max-w-site m-auto px-2 lg:px-4 h-full flex flex-row items-center justify-between">
             <Link href="/">
                 <a className="flex items-center">
-                    <img src="/devto-icon.svg" alt="the dev.to logo" className="mr-4 h-full w-auto" />
+                    <img
+                        src="/devto-icon.svg"
+                        alt="the dev.to logo"
+                        className="mr-4 h-full w-auto"
+                    />
                     <h1 className="text-lg">Analytics</h1>
                 </a>
             </Link>
@@ -35,7 +39,7 @@ const Header = ({ user }: IProps): JSX.Element => (
                     target="_blank"
                     rel="noreferrer noopener"
                 >
-                    <FiHelpCircle className="text-2xl text-ghost"/>
+                    <FiHelpCircle className="text-2xl text-ghost" />
                 </a>
                 <a
                     href="https://github.com/james-wallis/devto-analytics"
@@ -43,7 +47,7 @@ const Header = ({ user }: IProps): JSX.Element => (
                     target="_blank"
                     rel="noreferrer noopener"
                 >
-                    <FiGithub className="text-2xl text-ghost"/>
+                    <FiGithub className="text-2xl text-ghost" />
                 </a>
                 <a
                     href={user.websiteUrl || user.devToUrl}
@@ -51,11 +55,15 @@ const Header = ({ user }: IProps): JSX.Element => (
                     target="_blank"
                     rel="noreferrer noopener"
                 >
-                    <img className="h-full w-full rounded-full" src={user.image} alt={`profile for ${user.username}`} />
+                    <img
+                        className="h-full w-full rounded-full"
+                        src={user.image}
+                        alt={`profile for ${user.username}`}
+                    />
                 </a>
             </div>
         </div>
     </header>
 )
 
-export default Header;
+export default Header

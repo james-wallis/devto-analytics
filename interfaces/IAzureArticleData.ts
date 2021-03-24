@@ -1,15 +1,15 @@
-import IArticles from './IArticle';
+import IArticles from './IArticle'
 
 export interface IAzureArticleObject {
-    fetchedAt: string;
-    count: number;
-    articles: IArticles[];
+    fetchedAt: string
+    count: number
+    articles: IArticles[]
 }
 
 interface IAzureArticleData {
-    day: IAzureArticleObject;
-    week: IAzureArticleObject;
-    month: IAzureArticleObject;
+    day: IAzureArticleObject
+    week: IAzureArticleObject
+    month: IAzureArticleObject
 }
 
-export default IAzureArticleData;
+export default IAzureArticleData

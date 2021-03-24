@@ -56,7 +56,7 @@ export const getArticlesPublishedSince = (
 export const getHistoricalArticleDataForOverview = (
     azureData: IAzureArticleData,
     latestArticles: IArticle[]
-) => {
+): { day: ICombinedArticleStats; week: ICombinedArticleStats; month: ICombinedArticleStats } => {
     const { day, week, month } = azureData
     const [dayAgoDiff, weekAgoDiff, monthAgoDiff] = [day, week, month].map(
         (azureArticleObject: IAzureArticleObject): ICombinedArticleStats => {

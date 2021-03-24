@@ -17,7 +17,13 @@ interface IProps {
     latestFollowers: IFollower[]
 }
 
-const GraphContainer = ({}: IProps): JSX.Element => {
+const GraphContainer = ({
+    azureArticleData,
+    latestArticles,
+    azureFollowerData,
+    latestFollowers,
+}: IProps): JSX.Element => {
+    console.log(azureArticleData, latestArticles, azureFollowerData, latestFollowers)
     // const articleData: IGraphArticleData[] = sortedOldestArticleDataFirst.map(({ fetchedAt, articles }): IGraphArticleData => ({
     //     ...getCombinedArticleViewsReactionsComments(articles),
     //     fetchedAt: fetchedAt,

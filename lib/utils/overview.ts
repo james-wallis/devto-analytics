@@ -11,7 +11,7 @@ export const getOverviewStats = (
     historicCombinedArticleData: IHistoricalArticleData,
     historicCombinedFollowerData: IHistoricalFollowerData,
     latestFollowerCount: number
-) => {
+): IOverviewStats[] => {
     const overviewStats: IOverviewStats[] = [
         {
             type: 'stat',

@@ -8,7 +8,7 @@ export const getPageLinks = (numArticles: number, numGraphs: number): IPageLink[
     ]
 }
 
-export const changePage = (value: string, links: IPageLink[], router: NextRouter) => {
+export const changePage = (value: string, links: IPageLink[], router: NextRouter): void => {
     const link = links.find((link) => link.value === value);
     if (link) {
         router.push(link.href);

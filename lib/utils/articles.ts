@@ -4,7 +4,7 @@ import IArticleDiffs from '../../interfaces/IArticleDiffs';
 import IAzureArticleData, { IAzureArticleObject } from '../../interfaces/IAzureArticleData';
 import ICombinedArticleStats from '../../interfaces/ICombinedArticleStats';
 
-export const getPublishedArticles = (articles: IArticle[]) => (
+export const getPublishedArticles = (articles: IArticle[]): IArticle[] => (
     articles.filter(({ published }) => published)
 )
 
@@ -29,8 +29,8 @@ export const getCombinedCountDiffBetweenArticles = (olderArticles: IArticle[], n
     }
 }
 
-export const getArticlesPublishedSince = (range: dayjs.OpUnitType, published: boolean, publishedAt: string) => (
-    published && publishedAt && dayjs().subtract(1, range).hour(0).isBefore(publishedAt)
+export const getArticlesPublishedSince = (range: dayjs.OpUnitType, published: boolean, publishedAt: string): boolean => (
+    !!published && !!publishedAt && dayjs().subtract(1, range).hour(0).isBefore(publishedAt)
 )
 
 export const getHistoricalArticleDataForOverview = (azureData: IAzureArticleData, latestArticles: IArticle[]) => {
@@ -46,18 +46,18 @@ export const getHistoricalArticleDataForOverview = (azureData: IAzureArticleData
     }
 }
 
-export const getLatestPublishedArticle = (articles: IArticle[]) => {
+export const getLatestPublishedArticle = (articles: IArticle[]): IArticle => {
     const publishedArticles = getPublishedArticles(articles);
     const [latestArticle] = publishedArticles.sort((a, b) => dayjs(a.publishedAt).isBefore(b.publishedAt) ? 1 : -1);
     return latestArticle;
 }
 
-export const orderMostViewedFirst = (articles: IArticle[]) => {
+export const orderMostViewedFirst = (articles: IArticle[]): IArticle[] => {
     const publishedArticles = getPublishedArticles(articles);
     return publishedArticles.sort((a, b) => a.pageViewsCount < b.pageViewsCount ? 1 : -1);
 }
 
-export const orderMostReactedFirst = (articles: IArticle[]) => {
+export const orderMostReactedFirst = (articles: IArticle[]): IArticle[] => {
     const publishedArticles = getPublishedArticles(articles);
     return publishedArticles.sort((a, b) => a.publicReactionsCount < b.publicReactionsCount ? 1 : -1);
 }
@@ -78,7 +78,7 @@ const getDiffsBetweenArticles = (latestArticle: IArticle, olderArticle: IArticle
     }
 };
 
-export const getHistorialDiffsForLatestArticles = (latestArticles: IArticle[], datedAzureData: IAzureArticleData) => {
+export const getHistorialDiffsForLatestArticles = (latestArticles: IArticle[], datedAzureData: IAzureArticleData): IArticleWithDiffs[] => {
     return latestArticles.map((article: IArticle): IArticleWithDiffs => {
         const dayAgoArticle = datedAzureData.day.articles.find(({ id }) => id === article.id);
         const weekAgoArticle = datedAzureData.week.articles.find(({ id }) => id === article.id);

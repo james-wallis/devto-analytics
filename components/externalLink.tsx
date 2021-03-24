@@ -6,7 +6,7 @@ interface IProps {
     className?: string;
 }
 
-const ExternalLink = ({ href, children, className }: IProps) => (
+const ExternalLink = ({ href, children, className }: IProps): JSX.Element => (
     <a
         href={href}
         rel="noreferrer noopener"

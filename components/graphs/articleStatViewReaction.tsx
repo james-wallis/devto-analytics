@@ -11,7 +11,7 @@ interface IProps {
     daily?: boolean;
 }
 
-const PageViewReaction = ({ data: unfilteredData, reaction = false, daily = false }: IProps) => {
+const PageViewReaction = ({ data: unfilteredData, reaction = false, daily = false }: IProps): JSX.Element => {
     const data = daily
         ? unfilteredData.filter(({ fetchedAt }) => dayjs().subtract(1, 'day').subtract(1, 'hour').isBefore(fetchedAt))
         : unfilteredData.filter(({ fetchedAt }) => (dayjs().subtract(1, 'week').hour(0).isBefore(fetchedAt)) && dayjs(fetchedAt).hour() === 0);

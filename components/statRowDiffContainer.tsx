@@ -20,7 +20,7 @@ const getPosition = (position: 'left' | 'center' | 'right'): string => {
     }
 }
 
-const StatRowDiffContainer = ({ text, stats, position = 'left' }: IProps) => (
+const StatRowDiffContainer = ({ text, stats, position = 'left' }: IProps): JSX.Element => (
     <div
         key={`stat-row-container-${text}`}
         className={`flex flex-col md:flex-row ${getPosition(position)} md:items-center md:justify-start md:mr-4`}

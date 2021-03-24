@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { GetServerSideProps } from 'next';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { FiChevronsRight } from 'react-icons/fi';
 
 import GraphContainer from '../components/graphs/container';
@@ -26,7 +26,7 @@ interface IProps {
     user: IUser;
 }
 
-const IndexPage = ({ latestArticles, azureArticleData, azureFollowerData, latestFollowers, user }: IProps) => {
+const IndexPage = ({ latestArticles, azureArticleData, azureFollowerData, latestFollowers, user }: IProps): ReactNode => {
 
     return (
         <Layout title="Analytics Dashboard" user={user}>
@@ -53,7 +53,7 @@ const IndexPage = ({ latestArticles, azureArticleData, azureFollowerData, latest
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-    const promises: Promise<any>[] = [
+    const promises: Promise<IAzureArticleData | IArticle[] | IAzureFollowerData | IFollower[] | IUser>[] = [
         getAzureArticleData(),
         getArticles(),
         getAzureFollowerData(),

@@ -9,7 +9,7 @@ interface IProps {
     user: IUser;
 }
 
-const Layout = ({ children, title = 'This is the default title', user }: IProps) => (
+const Layout = ({ children, title = 'This is the default title', user }: IProps): JSX.Element => (
     <div className="">
         <Head>
             <title>{title}</title>

@@ -20,7 +20,7 @@ const getIcon = (type: 'reaction' | 'comment' | 'view'): IconType => {
     }
 }
 
-const StatRow = ({ stats, small = false, keyPrefix }: IProps) => (
+const StatRow = ({ stats, small = false, keyPrefix }: IProps): JSX.Element => (
     <>
         {stats.map(({ value, type }, i: number) => {
             const Icon = getIcon(type);

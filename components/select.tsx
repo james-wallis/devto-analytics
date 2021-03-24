@@ -7,7 +7,7 @@ interface IProps {
     className?: string;
 }
 
-const Select = ({ options, onChange, className = '' }: IProps) => (
+const Select = ({ options, onChange, className = '' }: IProps): JSX.Element => (
     <select
         onChange={onChange}
         className={`

@@ -6,7 +6,7 @@ interface IProps {
     active: 'posts' | 'graphs';
 }
 
-const SideNav = ({ numArticles, active }: IProps) => (
+const SideNav = ({ numArticles, active }: IProps): JSX.Element => (
     <aside>
         <nav className="hidden md:block">
             {getPageLinks(numArticles, 4).map(({ text, href, value, flairValue }) => (

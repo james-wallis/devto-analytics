@@ -3,6 +3,7 @@ import IAzureArticleData, { IAzureArticleObject } from '../../interfaces/IAzureA
 import IAzureFollowerData, { IAzureFollowerObject } from '../../interfaces/IAzureFollowerData';
 import IFollower from '../../interfaces/IFollower';
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
 export const parseArticle = (data: any): IArticle => ({
     id: data.id,
     title: data.title,
@@ -18,6 +19,7 @@ export const parseArticle = (data: any): IArticle => ({
     tags: data.tag_list,
 });
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
 export const parseAzureArticleData = (data: any): IAzureArticleData => {
     const [day, week, month] = ['dayAgo', 'weekAgo', 'monthAgo'].map((key): IAzureArticleObject => ({
         fetchedAt: data[key].fetchedAt,
@@ -31,11 +33,13 @@ export const parseAzureArticleData = (data: any): IAzureArticleData => {
     }
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
 export const parseFollower = (item: any): IFollower => ({
     id: item.id,
     username: item.username
 });
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
 export const parseAzureFollowerData = (data: any): IAzureFollowerData => {
     const [day, week, month] = ['dayAgo', 'weekAgo', 'monthAgo'].map((key): IAzureFollowerObject => ({
         fetchedAt: data[key].fetchedAt,

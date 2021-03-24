@@ -17,7 +17,7 @@ interface IProps {
     latestFollowers: IFollower[];
 }
 
-const GraphContainer = ({}: IProps) => {
+const GraphContainer = ({}: IProps): JSX.Element => {
     // const articleData: IGraphArticleData[] = sortedOldestArticleDataFirst.map(({ fetchedAt, articles }): IGraphArticleData => ({
     //     ...getCombinedArticleViewsReactionsComments(articles),
     //     fetchedAt: fetchedAt,

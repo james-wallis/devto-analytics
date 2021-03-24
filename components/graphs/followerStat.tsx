@@ -8,7 +8,7 @@ interface IProps {
     latestFollowers: IFollower[];
 }
 
-const FollowersStat = ({ data: unfilteredData, latestFollowers }: IProps) => {
+const FollowersStat = ({ data: unfilteredData, latestFollowers }: IProps): JSX.Element => {
     const data: IGraphFollowerData[] = [
         ...unfilteredData.filter(({ fetchedAt }) => (dayjs().subtract(1, 'week').hour(0).isBefore(fetchedAt)) && dayjs(fetchedAt).hour() === 23),
         { fetchedAt: dayjs().toISOString(), followersCount: latestFollowers.length },

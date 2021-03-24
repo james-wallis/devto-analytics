@@ -3,6 +3,6 @@ interface ICombinedArticleStats {
     reactions: number;
     comments: number;
     publishedPosts: number;
-};
+}
 
 export default ICombinedArticleStats;

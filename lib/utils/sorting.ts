@@ -1,7 +1,7 @@
 import IArticle, { IArticleWithDiffs } from '../../interfaces/IArticle';
 import { DiffTypes } from '../../types';
 
-const mostViewsFirst = (article1: IArticle | IArticleWithDiffs, article2: IArticle | IArticleWithDiffs, diffType?: DiffTypes | '') => {
+const mostViewsFirst = (article1: IArticle | IArticleWithDiffs, article2: IArticle | IArticleWithDiffs, diffType?: DiffTypes | ''): number => {
     if (diffType) {
         const a1 = article1 as IArticleWithDiffs;
         const a2 = article2 as IArticleWithDiffs;
@@ -10,7 +10,7 @@ const mostViewsFirst = (article1: IArticle | IArticleWithDiffs, article2: IArtic
     return article1.pageViewsCount < article2.pageViewsCount ? 1 : -1
 };
 
-const mostReactionsFirst = (article1: IArticle | IArticleWithDiffs, article2: IArticle | IArticleWithDiffs, diffType?: DiffTypes | '') => {
+const mostReactionsFirst = (article1: IArticle | IArticleWithDiffs, article2: IArticle | IArticleWithDiffs, diffType?: DiffTypes | ''): number => {
     if (diffType) {
         const a1 = article1 as IArticleWithDiffs;
         const a2 = article2 as IArticleWithDiffs;
@@ -19,7 +19,7 @@ const mostReactionsFirst = (article1: IArticle | IArticleWithDiffs, article2: IA
     return article1.publicReactionsCount < article2.publicReactionsCount ? 1 : -1
 };
 
-const mostCommentsFirst = (article1: IArticle | IArticleWithDiffs, article2: IArticle | IArticleWithDiffs, diffType?: DiffTypes | '') => {
+const mostCommentsFirst = (article1: IArticle | IArticleWithDiffs, article2: IArticle | IArticleWithDiffs, diffType?: DiffTypes | ''): number => {
     if (diffType) {
         const a1 = article1 as IArticleWithDiffs;
         const a2 = article2 as IArticleWithDiffs;

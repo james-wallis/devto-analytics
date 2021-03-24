@@ -16,7 +16,7 @@ interface IProps {
     border: boolean;
 }
 
-const ArticleCard = ({ title, url, publishedAt, publicReactionsCount, commentsCount, pageViewsCount, diffs, border }: IProps) => {
+const ArticleCard = ({ title, url, publishedAt, publicReactionsCount, commentsCount, pageViewsCount, diffs, border }: IProps): JSX.Element => {
     const mainStats: IArticleRowStat[] = [
         { value: publicReactionsCount, type: 'reaction' },
         { value: commentsCount, type: 'comment' },
@@ -61,7 +61,7 @@ const ArticleCard = ({ title, url, publishedAt, publicReactionsCount, commentsCo
                     { text: '7 days', stats: weekIncreaseStats, position: 'center' },
                     { text: '30 days', stats: monthIncreaseStats, position: 'right' },
                 ].map(({ text, stats, position }) => (
-                    <StatRowDiffContainer text={text} stats={stats} position={position as 'left' | 'center' | 'right'} />
+                    <StatRowDiffContainer key={`stat-container-${text}`} text={text} stats={stats} position={position as 'left' | 'center' | 'right'} />
                 ))}
             </div>
         </div>

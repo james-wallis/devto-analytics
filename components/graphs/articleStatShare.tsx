@@ -6,7 +6,7 @@ interface IProps {
     articles: IArticle[];
 }
 
-const ArticleStatShare = ({ articles }: IProps) => {
+const ArticleStatShare = ({ articles }: IProps): JSX.Element => {
     const articlesSortedByViews = articles.sort((a, b) => a.pageViewsCount >= b.pageViewsCount ? 1 : -1);
     const articlesSortedByReactions = articles.sort((a, b) => a.publicReactionsCount >= b.publicReactionsCount ? 1 : -1);
     return (

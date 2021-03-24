@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import ArticleCard from '../components/articleCard';
 
 import Layout from '../components/Layout';
@@ -53,7 +53,7 @@ const diffSelectionOpts: ISelectOption[] = [
     { text: 'Past month', value: 'month' as DiffTypes },
 ];
 
-const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latestFollowers, user }: IProps) => {
+const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latestFollowers, user }: IProps): ReactNode => {
     const [articleSortingOrder, setArticleSortingOrder] = useState(articleSelectOpts[0].value);
     const [diffSortingOrder, setDiffSortingOrder] = useState(diffSelectionOpts[0].value);
 
@@ -102,6 +102,7 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
                             title, url, publishedAt, publicReactionsCount, commentsCount, pageViewsCount, diffs,
                         }: IArticleWithDiffs, i: number) => (
                             <ArticleCard
+                                key={url}
                                 title={title}
                                 url={url}
                                 publishedAt={publishedAt}
@@ -120,7 +121,7 @@ const IndexPage = ({ azureArticleData, latestArticles, azureFollowerData, latest
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-    const promises: Promise<any>[] = [
+    const promises: Promise<IAzureArticleData | IArticle[] | IAzureFollowerData | IFollower[] | IUser>[] = [
         getAzureArticleData(),
         getArticles(),
         getAzureFollowerData(),

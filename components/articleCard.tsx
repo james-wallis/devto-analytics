@@ -54,6 +54,7 @@ const ArticleCard = ({
                 <p className="text-sm text-card-tertiary-color">
                     <strong className="font-medium mr-1">Published:</strong>
                     <time dateTime={publishedAt}>{dayjs(publishedAt).format('D MMM')}</time>
+                    <span className="ml-1">({dayjs(publishedAt).fromNow()})</span>
                 </p>
             </div>
             <div className="flex flex-nowrap whitespace-nowrap text-sm text-card-tertiary-color order-last md:order-none">

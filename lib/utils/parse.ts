@@ -21,7 +21,7 @@ export const parseArticle = (data: any): IArticle => ({
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
 export const parseAzureArticleData = (data: any): IAzureArticleData => {
-    const [day, week, month] = ['dayAgo', 'weekAgo', 'monthAgo'].map(
+    const [day, week, month, latest] = ['dayAgo', 'weekAgo', 'monthAgo', 'latest'].map(
         (key): IAzureArticleObject => ({
             fetchedAt: data[key].fetchedAt,
             count: data[key].count,
@@ -29,6 +29,7 @@ export const parseAzureArticleData = (data: any): IAzureArticleData => {
         })
     )
     return {
+        latest,
         day,
         week,
         month,
@@ -43,7 +44,7 @@ export const parseFollower = (item: any): IFollower => ({
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
 export const parseAzureFollowerData = (data: any): IAzureFollowerData => {
-    const [day, week, month] = ['dayAgo', 'weekAgo', 'monthAgo'].map(
+    const [day, week, month, latest] = ['dayAgo', 'weekAgo', 'monthAgo', 'latest'].map(
         (key): IAzureFollowerObject => ({
             fetchedAt: data[key].fetchedAt,
             count: data[key].count,
@@ -54,6 +55,7 @@ export const parseAzureFollowerData = (data: any): IAzureFollowerData => {
         })
     )
     return {
+        latest,
         day,
         week,
         month,

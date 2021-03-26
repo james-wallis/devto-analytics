@@ -1,8 +1,10 @@
+import axios from 'axios'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import { ReactNode, useState } from 'react'
+import useSWR from 'swr'
 import ArticleCard from '../components/articleCard'
 
 import Layout from '../components/Layout'
@@ -20,7 +22,7 @@ import IOverviewStats from '../interfaces/IOverviewStats'
 import ISelectOption from '../interfaces/ISelectOption'
 import IUser from '../interfaces/IUser'
 import { getAzureArticleData, getAzureFollowerData } from '../lib/azure'
-import { getArticles, getFollowers, getUser } from '../lib/devto'
+import { getUser } from '../lib/devto'
 import { changePage, getPageLinks } from '../lib/navigation'
 import {
     getCombinedArticleViewsReactionsComments,
@@ -59,13 +61,21 @@ const diffSelectionOpts: ISelectOption[] = [
     { text: 'Past month', value: 'month' as DiffTypes },
 ]
 
-const IndexPage = ({
-    azureArticleData,
-    latestArticles,
-    azureFollowerData,
-    latestFollowers,
-    user,
-}: IProps): ReactNode => {
+const fetcher = (url: string): Promise<IArticle[] | IFollower[]> =>
+    axios.get(url).then((res) => res.data)
+
+const IndexPage = ({ azureArticleData, azureFollowerData, user }: IProps): ReactNode => {
+    const { data: articleData } = useSWR('/api/articles', fetcher, {
+        initialData: azureArticleData.latest.articles,
+        revalidateOnMount: true,
+    })
+    const latestArticles: IArticle[] = articleData as IArticle[]
+
+    const { data: lastestFollowers } = useSWR('/api/followers', fetcher)
+    const latestFollowerCount: number = lastestFollowers
+        ? lastestFollowers.length
+        : azureFollowerData.latest.count
+
     const [articleSortingOrder, setArticleSortingOrder] = useState(articleSelectOpts[0].value)
     const [diffSortingOrder, setDiffSortingOrder] = useState(diffSelectionOpts[0].value)
 
@@ -89,7 +99,7 @@ const IndexPage = ({
     )
     const historicCombinedFollowerData: IHistoricalFollowerData = getHistoricalFollowerDataForOverview(
         azureFollowerData,
-        latestFollowers
+        latestFollowerCount
     )
 
     const overviewStats: IOverviewStats[] = getOverviewStats(
@@ -97,7 +107,7 @@ const IndexPage = ({
         latestCombinedArticleStats,
         historicCombinedArticleData,
         historicCombinedFollowerData,
-        latestFollowers.length
+        latestFollowerCount
     )
 
     const sortedArticles: IArticleWithDiffs[] = sortArticlesWithDiff(
@@ -176,24 +186,18 @@ const IndexPage = ({
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-    const promises: Promise<
-        IAzureArticleData | IArticle[] | IAzureFollowerData | IFollower[] | IUser
-    >[] = [getAzureArticleData(), getArticles(), getAzureFollowerData(), getFollowers(), getUser()]
+    const promises: Promise<IAzureArticleData | IAzureFollowerData | IUser>[] = [
+        getAzureArticleData(),
+        getAzureFollowerData(),
+        getUser(),
+    ]
 
-    const [
-        azureArticleData,
-        latestArticles,
-        azureFollowerData,
-        latestFollowers,
-        user,
-    ] = await Promise.all(promises)
+    const [azureArticleData, azureFollowerData, user] = await Promise.all(promises)
 
     return {
         props: {
             azureArticleData,
-            latestArticles,
             azureFollowerData,
-            latestFollowers,
             user,
         },
         // revalidate: 60, // In seconds

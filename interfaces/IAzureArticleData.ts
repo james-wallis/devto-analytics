@@ -7,6 +7,7 @@ export interface IAzureArticleObject {
 }
 
 interface IAzureArticleData {
+    latest: IAzureArticleObject
     day: IAzureArticleObject
     week: IAzureArticleObject
     month: IAzureArticleObject

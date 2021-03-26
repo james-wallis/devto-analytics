@@ -7,6 +7,7 @@ export interface IAzureFollowerObject {
 }
 
 interface IAzureFollowerData {
+    latest: IAzureFollowerObject
     day: IAzureFollowerObject
     week: IAzureFollowerObject
     month: IAzureFollowerObject

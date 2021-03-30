@@ -1,4 +1,4 @@
-import IArticleDiffs from './IArticleDiffs'
+import IHistoricalData from './IHistoricalData'
 
 interface IArticle {
     id: number
@@ -7,20 +7,10 @@ interface IArticle {
     publishedAt: string
     url: string
     canonicalUrl: string
-    commentsCount: number
-    publicReactionsCount: number
-    positiveReactionsCount: number
-    pageViewsCount: number
     coverImage: string
-    tags: string[]
-}
-
-export interface IArticleWithDiffs extends IArticle {
-    diffs: {
-        day: IArticleDiffs
-        week: IArticleDiffs
-        month: IArticleDiffs
-    }
+    comments: IHistoricalData
+    reactions: IHistoricalData
+    pageViews: IHistoricalData
 }
 
 export default IArticle

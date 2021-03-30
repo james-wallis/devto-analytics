@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { getPageLinks } from '../lib/navigation'
+import { getPageLinks } from '../../lib/navigation'
 
 interface IProps {
     numArticles: number

@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 import Head from 'next/head'
 import Header from './header'
-import IUser from '../interfaces/IUser'
+import IUser from '../../interfaces/IUser'
 
 interface IProps {
     children?: ReactNode

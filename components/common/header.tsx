@@ -1,6 +1,6 @@
 import { FiGithub, FiHelpCircle } from 'react-icons/fi'
 import Link from 'next/link'
-import IUser from '../interfaces/IUser'
+import IUser from '../../interfaces/IUser'
 
 interface IProps {
     user: IUser

@@ -1,6 +1,6 @@
 import { IconType } from 'react-icons'
 import { FiEye, FiHeart, FiMessageCircle } from 'react-icons/fi'
-import IArticleRowStat from '../interfaces/IArticleRowStat'
+import IArticleRowStat from '../../interfaces/IArticleRowStat'
 
 interface IProps {
     stats: IArticleRowStat[]

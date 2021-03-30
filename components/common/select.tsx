@@ -1,5 +1,5 @@
 import { ChangeEvent } from 'react'
-import ISelectOption from '../interfaces/ISelectOption'
+import ISelectOption from '../../interfaces/ISelectOption'
 
 interface IProps {
     options: ISelectOption[]

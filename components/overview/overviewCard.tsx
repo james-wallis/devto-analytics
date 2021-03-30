@@ -1,6 +1,6 @@
-import IOverviewStats from '../interfaces/IOverviewStats'
+import IOverviewStats from '../../interfaces/IOverviewStats'
 
-const StatCard = ({ title, subtitle, headlineValue, stats }: IOverviewStats): JSX.Element => {
+const OverviewCard = ({ title, subtitle, headlineValue, stats }: IOverviewStats): JSX.Element => {
     return (
         <div className="p-3 md:p-6 bg-card-secondary-bg text-card-secondary-color flex flex-col shadow-card rounded-devto">
             <strong className="text-2xl md:text-3xl leading-tight md:leading-tight font-bold">
@@ -31,4 +31,4 @@ const StatCard = ({ title, subtitle, headlineValue, stats }: IOverviewStats): JS
     )
 }
 
-export default StatCard
+export default OverviewCard

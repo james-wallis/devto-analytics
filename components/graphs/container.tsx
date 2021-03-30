@@ -1,40 +1,13 @@
-// import dayjs from 'dayjs';
-import IArticle from '../../interfaces/IArticle'
 import IAzureArticleData from '../../interfaces/IAzureArticleData'
 import IAzureFollowerData from '../../interfaces/IAzureFollowerData'
-import IFollower from '../../interfaces/IFollower'
-// import IGraphArticleData from '../../interfaces/IGraphArticleData';
-// import IGraphFollowerData from '../../interfaces/IGraphFollowerData';
-// import { getCombinedArticleViewsReactionsComments } from '../../lib/utils/articles';
-// import ArticleStatShare from './articleStatShare';
-// import ArticleStatViewReaction from './articleStatViewReaction';
-// import FollowerStat from './followerStat';
 
 interface IProps {
-    azureArticleData: IAzureArticleData[]
-    latestArticles: IArticle[]
-    azureFollowerData: IAzureFollowerData[]
-    latestFollowers: IFollower[]
+    azureArticleData: IAzureArticleData
+    azureFollowerData: IAzureFollowerData
 }
 
-const GraphContainer = ({
-    azureArticleData,
-    latestArticles,
-    azureFollowerData,
-    latestFollowers,
-}: IProps): JSX.Element => {
-    console.log(azureArticleData, latestArticles, azureFollowerData, latestFollowers)
-    // const articleData: IGraphArticleData[] = sortedOldestArticleDataFirst.map(({ fetchedAt, articles }): IGraphArticleData => ({
-    //     ...getCombinedArticleViewsReactionsComments(articles),
-    //     fetchedAt: fetchedAt,
-    // }));
-
-    // const sortedOldestFollowerDataFirst: IAzureFollowerData[] = azureFollowerData.sort(sortAzureDataOldestFirst);
-    // const followerData: IGraphFollowerData[] = sortedOldestFollowerDataFirst.map(({ fetchedAt, count }) => ({
-    //     fetchedAt,
-    //     followersCount: count,
-    // }));
-
+const GraphContainer = ({ azureArticleData, azureFollowerData }: IProps): JSX.Element => {
+    console.log(azureArticleData, azureFollowerData)
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
             {/* <ArticleStatViewReaction title="Post view difference" data={articleData} daily />

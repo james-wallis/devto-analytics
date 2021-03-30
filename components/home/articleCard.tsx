@@ -1,17 +1,17 @@
 import dayjs from 'dayjs'
 import StatRow from './statRow'
-import { IArticleWithDiffs } from '../interfaces/IArticle'
-import IArticleRowStat from '../interfaces/IArticleRowStat'
-import ExternalLink from './externalLink'
+import IArticleRowStat from '../../interfaces/IArticleRowStat'
+import ExternalLink from '../common/externalLink'
 import StatRowDiffContainer from './statRowDiffContainer'
+import IArticleWithDiffs from '../../interfaces/IArticleWithDiffs'
 
 interface IProps {
-    title: IArticleWithDiffs['title']
-    url: IArticleWithDiffs['url']
-    publishedAt: IArticleWithDiffs['publishedAt']
-    publicReactionsCount: IArticleWithDiffs['publicReactionsCount']
-    commentsCount: IArticleWithDiffs['commentsCount']
-    pageViewsCount: IArticleWithDiffs['pageViewsCount']
+    title: string
+    url: string
+    publishedAt: string
+    reactionsCount: number
+    commentsCount: number
+    pageViewsCount: number
     diffs: IArticleWithDiffs['diffs']
     border: boolean
 }
@@ -20,14 +20,14 @@ const ArticleCard = ({
     title,
     url,
     publishedAt,
-    publicReactionsCount,
+    reactionsCount,
     commentsCount,
     pageViewsCount,
     diffs,
     border,
 }: IProps): JSX.Element => {
     const mainStats: IArticleRowStat[] = [
-        { value: publicReactionsCount, type: 'reaction' },
+        { value: reactionsCount, type: 'reaction' },
         { value: commentsCount, type: 'comment' },
         { value: pageViewsCount, type: 'view' },
     ]

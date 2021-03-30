@@ -1,4 +1,4 @@
-import IHistoricalData from './IHistoricalData'
+import IHistoricalData from './IHistoricalData';
 
 interface IArticle {
     id: number
@@ -8,9 +8,9 @@ interface IArticle {
     url: string
     canonicalUrl: string
     coverImage: string
-    comments: IHistoricalData
-    reactions: IHistoricalData
-    pageViews: IHistoricalData
+    comments: IHistoricalData;
+    reactions: IHistoricalData;
+    pageViews: IHistoricalData;
 }
 
-export default IArticle
+export default IArticle;

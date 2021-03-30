@@ -1,10 +1,11 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions"
 import { Container, CosmosClient, Database, SqlQuerySpec } from "@azure/cosmos";
-import { IArticlesReponseBody } from "../interfaces/IResponseBody";
 import dayjs, { Dayjs } from "dayjs";
-import IArticleWithHistoricalData from "../interfaces/IArticleWithHistorialData";
-import IHistoricalData from "../interfaces/IHistoricalData";
 import axios, { AxiosResponse } from "axios";
+import { ICosmosFollowersReponseBody } from "../interfaces/IResponseBody";
+import IArticle from "../../common/interfaces/IArticle";
+import IHistoricalData from "../../common/interfaces/IHistoricalData";
+import IAzureArticleData from "../../common/interfaces/IAzureArticleData";
 
 const getArticleDataForGivenDateTime = async (container: Container, dateTime: Dayjs) => {
     const dateTimeIso = dateTime.toISOString();
@@ -24,7 +25,7 @@ const getOldestArticleData = async (container: Container) => {
     };
     const { resources } = await container.items
         .query(querySpec)
-        .fetchAll() as { resources: IArticlesReponseBody[] };
+        .fetchAll() as { resources: ICosmosFollowersReponseBody[] };
     return resources[0];
 }
 
@@ -38,42 +39,7 @@ const getArticles = async () => {
     return data
 }
 
-// const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
-//     const endpoint = process.env['COSMOS_ENDPOINT'];
-//     const key = process.env['COSMOS_KEY'];
-//     const client: CosmosClient = new CosmosClient({ endpoint, key });
-//     const database: Database = client.database('devtostats');
-//     const container: Container = database.container('MyCollection');
-
-//     const date = req.query.date || dayjs().toISOString();
-
-
-//     // If the date is given, return the data available for day, week and month ago
-//     const sanitisedDate: Dayjs = dayjs(req.query.date).minute(0).second(0).millisecond(0);
-//     const dayAgo = sanitisedDate.subtract(1, 'day');
-//     const weekAgo = sanitisedDate.subtract(1, 'week');
-//     const monthAgo = sanitisedDate.subtract(1, 'month');
-//     const latest = dayjs().subtract(1, 'hour');
-
-//     const promises = [dayAgo, weekAgo, monthAgo, latest].map(async (dateTime) => (
-//         getArticleDataForGivenDateTime(container, dateTime)
-//     ));
-
-//     const [dayAgoData, weekAgoData, monthAgoData, latestArticleData, oldestArticleData] = await Promise.all([...promises, getOldestArticleData(container)]);
-
-//     context.res = {
-//         body: {
-//             latest: latestArticleData,
-//             dayAgo: dayAgoData || oldestArticleData || '',
-//             weekAgo: weekAgoData || oldestArticleData || '',
-//             monthAgo: monthAgoData || oldestArticleData || '',
-//         }
-//     };
-//     return;
-
-// };
-
-const getCombined = (key: 'comments' | 'reactions' | 'pageViews', articlesWithHistoricalData: IArticleWithHistoricalData[]): IHistoricalData => {
+const getCombined = (key: 'comments' | 'reactions' | 'pageViews', articlesWithHistoricalData: IArticle[]): IHistoricalData => {
     const combinedData: IHistoricalData = {
         current: 0,
         dayAgo: 0,
@@ -116,7 +82,7 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
 
     const [dayAgoData, weekAgoData, monthAgoData, oldestArticleData, latestDevToArticles] = await Promise.all([...promises, getOldestArticleData(container), getArticles()]);
 
-    const articlesWithHistoricalData: IArticleWithHistoricalData[] = latestDevToArticles.map((article): IArticleWithHistoricalData => {
+    const articlesWithHistoricalData: IArticle[] = latestDevToArticles.map((article): IArticle => {
         const dayAgoArticle = dayAgoData ? dayAgoData.articles.find(({ id: _id }) => article.id === _id) : null;
         const weekAgoArticle = weekAgoData ? weekAgoData.articles.find(({ id: _id }) => article.id === _id) : null;
         const monthAgoArticle = monthAgoData ? monthAgoData.articles.find(({ id: _id }) => article.id === _id) : null;
@@ -160,7 +126,7 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
         pageViews: getCombined('pageViews', articlesWithHistoricalData),
     }
 
-    const body: IArticlesReponseBody = {
+    const body: IAzureArticleData = {
         combined,
         articles: articlesWithHistoricalData,
     }

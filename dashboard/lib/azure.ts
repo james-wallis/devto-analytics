@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios'
 import dayjs from 'dayjs'
-import IAzureArticleData from '../interfaces/IAzureArticleData'
-import IAzureFollowerData from '../interfaces/IAzureFollowerData'
+import IAzureArticleData from '../../common/interfaces/IAzureArticleData'
+import IAzureFollowerData from '../../common/interfaces/IAzureFollowerData'
 
 export const getAzureArticleData = async (): Promise<IAzureArticleData> => {
     const headers = { 'x-functions-key': process.env['AZURE_ARTICLES_CODE'] }

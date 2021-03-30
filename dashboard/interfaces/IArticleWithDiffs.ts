@@ -1,4 +1,4 @@
-import IArticleWithHistoricalData from './IArticle'
+import IArticle from '../../common/interfaces/IArticle'
 
 interface IArticleDiffs {
     pageViews: number
@@ -6,7 +6,7 @@ interface IArticleDiffs {
     comments: number
 }
 
-interface IArticleWithDiffs extends IArticleWithHistoricalData {
+interface IArticleWithDiffs extends IArticle {
     diffs: {
         day: IArticleDiffs
         week: IArticleDiffs

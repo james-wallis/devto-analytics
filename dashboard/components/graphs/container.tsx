@@ -1,5 +1,5 @@
-import IAzureArticleData from '../../interfaces/IAzureArticleData'
-import IAzureFollowerData from '../../interfaces/IAzureFollowerData'
+import IAzureArticleData from '../../../common/interfaces/IAzureArticleData'
+import IAzureFollowerData from '../../../common/interfaces/IAzureFollowerData'
 
 interface IProps {
     azureArticleData: IAzureArticleData

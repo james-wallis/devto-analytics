@@ -1,0 +1,11 @@
+{
+    "azureFunctions.deploySubpath": "azure-functions",
+    "azureFunctions.postDeployTask": "npm install",
+    "azureFunctions.projectLanguage": "TypeScript",
+    "azureFunctions.projectRuntime": "~2",
+    "azureFunctions.preDeployTask": "npm prune",
+    "editor.formatOnSave": false,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    }
+}

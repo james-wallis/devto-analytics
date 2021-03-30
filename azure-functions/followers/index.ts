@@ -1,7 +1,8 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions"
 import { Container, CosmosClient, Database, SqlQuerySpec } from "@azure/cosmos";
-import { IFollowersReponseBody } from "../interfaces/IResponseBody";
 import dayjs, { Dayjs } from "dayjs";
+import { ICosmosFollowersReponseBody } from "../interfaces/IResponseBody";
+import IAzureFollowerData from "../../common/interfaces/IAzureFollowerData";
 
 const getFollowerDataForGivenDateTime = async (container: Container, dateTime: Dayjs) => {
     const dateTimeIso = dateTime.toISOString();
@@ -21,7 +22,7 @@ const getOldestFollowerData = async (container: Container) => {
     };
     const { resources } = await container.items
         .query(querySpec)
-        .fetchAll() as { resources: IFollowersReponseBody[] };
+        .fetchAll() as { resources: ICosmosFollowersReponseBody[] };
     return resources[0];
 }
 
@@ -54,7 +55,7 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
 
     const [dayAgoData, weekAgoData, monthAgoData, latestArticleData, { followers: _f, ...oldestArticleData }] = await Promise.all([...promises, getOldestFollowerData(container)]);
 
-    const body: IFollowersReponseBody = {
+    const body: IAzureFollowerData = {
         count: {
             current: latestArticleData.count,
             dayAgo: dayAgoData ? dayAgoData.count : null,

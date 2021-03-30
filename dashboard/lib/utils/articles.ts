@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import IArticle from '../../interfaces/IArticle'
+import IArticle from '../../../common/interfaces/IArticle'
 import IArticleWithDiffs from '../../interfaces/IArticleWithDiffs'
 
 export const getPublishedArticles = (articles: IArticle[]): IArticle[] =>

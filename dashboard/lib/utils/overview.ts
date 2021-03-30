@@ -1,12 +1,12 @@
 import dayjs from 'dayjs'
-import IAzureArticleData from '../../interfaces/IAzureArticleData'
-import IAzureFollowerData from '../../interfaces/IAzureFollowerData'
-import IArticleWithHistoricalData from '../../interfaces/IArticle'
+import IAzureArticleData from '../../../common/interfaces/IAzureArticleData'
+import IAzureFollowerData from '../../../common/interfaces/IAzureFollowerData'
+import IArticle from '../../../common/interfaces/IArticle'
 import IOverviewStats from '../../interfaces/IOverviewStats'
 import { isArticlePublishedSince } from './articles'
 
 export const getOverviewStats = (
-    latestArticle: IArticleWithHistoricalData,
+    latestArticle: IArticle,
     azureArticleData: IAzureArticleData,
     azureFollowerData: IAzureFollowerData,
     numArticlesPublished: number

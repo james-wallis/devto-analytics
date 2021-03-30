@@ -19,5 +19,12 @@
         "target": "esnext"
     },
     "exclude": ["node_modules"],
-    "include": ["**/*.ts", "**/*.tsx"]
+    "include": ["**/*.ts", "**/*.tsx"],
+    "references": [
+        {
+            "path": "../common",
+            // add 'prepend' if you want to include the referenced project in your output file
+            // "prepend": true,
+        }
+    ]
 }

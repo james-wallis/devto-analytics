@@ -9,10 +9,10 @@ import Layout from '../components/common/Layout'
 import Select from '../components/common/select'
 import SideNav from '../components/common/sideNav'
 import StatGrid from '../components/overview/overviewGrid'
-import IAzureArticleData from '../interfaces/IAzureArticleData'
-import IAzureFollowerData from '../interfaces/IAzureFollowerData'
+import IAzureArticleData from '../../common/interfaces/IAzureArticleData'
+import IAzureFollowerData from '../../common/interfaces/IAzureFollowerData'
 import IArticleWithDiffs from '../interfaces/IArticleWithDiffs'
-import IArticleWithHistoricalData from '../interfaces/IArticle'
+import IArticle from '../../common/interfaces/IArticle'
 import IOverviewStats from '../interfaces/IOverviewStats'
 import ISelectOption from '../interfaces/ISelectOption'
 import IUser from '../interfaces/IUser'
@@ -55,9 +55,7 @@ const IndexPage = ({ azureArticleData, azureFollowerData, user }: IProps): React
     const [articleSortingOrder, setArticleSortingOrder] = useState(articleSelectOpts[0].value)
     const [diffSortingOrder, setDiffSortingOrder] = useState(diffSelectionOpts[0].value)
 
-    const publishedArticles: IArticleWithHistoricalData[] = getPublishedArticles(
-        azureArticleData.articles
-    )
+    const publishedArticles: IArticle[] = getPublishedArticles(azureArticleData.articles)
 
     const articlesWithDiffs: IArticleWithDiffs[] = addDiffsToArticle(publishedArticles)
 

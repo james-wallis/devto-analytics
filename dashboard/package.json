@@ -9,7 +9,7 @@
         "type-check": "tsc --project tsconfig.json --pretty --noEmit",
         "eslint": "eslint --ext js,jsx,ts,tsx --fix .",
         "prettier": "prettier --write .",
-        "prepare": "husky install"
+        "prepare": "cd .. && husky install dashboard/.husky"
     },
     "dependencies": {
         "autoprefixer": "^10.2.5",
@@ -35,7 +35,7 @@
         "eslint-plugin-prettier": "^3.3.1",
         "eslint-plugin-react": "^7.23.1",
         "eslint-plugin-react-hooks": "^4.2.0",
-        "husky": "^5.2.0",
+        "husky": "^6.0.0",
         "prettier": "^2.2.1",
         "typescript": "^4.2.3"
     },

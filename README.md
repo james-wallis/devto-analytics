@@ -1,4 +1,4 @@
 # Dev.to Analytics
 
 Currently:
-![image](https://user-images.githubusercontent.com/17385115/111241576-59806300-85f5-11eb-895f-45e02f55fcea.png)
+![image](https://user-images.githubusercontent.com/17385115/112986738-c8af9880-9159-11eb-9d71-9f3a02ad4202.png)

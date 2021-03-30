@@ -1,49 +1,78 @@
 import dayjs from 'dayjs'
-import IArticle from '../../interfaces/IArticle'
-import ICombinedArticleStats from '../../interfaces/ICombinedArticleStats'
-import IHistoricalArticleData from '../../interfaces/IHistoricalArticleData'
-import IHistoricalFollowerData from '../../interfaces/IHistoricalFollowerData'
+import IAzureArticleData from '../../interfaces/IAzureArticleData'
+import IAzureFollowerData from '../../interfaces/IAzureFollowerData'
+import IArticleWithHistoricalData from '../../interfaces/IArticle'
 import IOverviewStats from '../../interfaces/IOverviewStats'
+import { isArticlePublishedSince } from './articles'
 
 export const getOverviewStats = (
-    latestArticle: IArticle,
-    latestCombinedArticleStats: ICombinedArticleStats,
-    historicCombinedArticleData: IHistoricalArticleData,
-    historicCombinedFollowerData: IHistoricalFollowerData,
-    latestFollowerCount: number
+    latestArticle: IArticleWithHistoricalData,
+    azureArticleData: IAzureArticleData,
+    azureFollowerData: IAzureFollowerData,
+    numArticlesPublished: number
 ): IOverviewStats[] => {
+    const { combined: combinedArticleStats, articles } = azureArticleData
+
+    const numArticlesPublishedInLastMonth: number = articles.reduce(
+        (count: number, { published, publishedAt }) =>
+            isArticlePublishedSince('month', published, publishedAt) ? count + 1 : count,
+        0
+    )
+
     const overviewStats: IOverviewStats[] = [
         {
-            type: 'stat',
             title: 'Total post reactions',
-            headlineValue: latestCombinedArticleStats.reactions,
+            headlineValue: combinedArticleStats.reactions.current,
             stats: [
-                { text: 'Last 7 days', value: historicCombinedArticleData.week.reactions },
-                { text: 'Last 30 days', value: historicCombinedArticleData.month.reactions },
+                {
+                    text: 'Last 7 days',
+                    value:
+                        combinedArticleStats.reactions.current -
+                        combinedArticleStats.reactions.weekAgo,
+                },
+                {
+                    text: 'Last 30 days',
+                    value:
+                        combinedArticleStats.reactions.current -
+                        combinedArticleStats.reactions.monthAgo,
+                },
             ],
         },
         {
-            type: 'stat',
             title: 'Total post views',
-            headlineValue: latestCombinedArticleStats.views,
+            headlineValue: combinedArticleStats.pageViews.current,
             stats: [
-                { text: 'Last 24 hours', value: historicCombinedArticleData.day.views },
-                { text: 'Last 7 days', value: historicCombinedArticleData.week.views },
+                {
+                    text: 'Last 24 hours',
+                    value:
+                        combinedArticleStats.pageViews.current -
+                        combinedArticleStats.pageViews.dayAgo,
+                },
+                {
+                    text: 'Last 7 days',
+                    value:
+                        combinedArticleStats.pageViews.current -
+                        combinedArticleStats.pageViews.weekAgo,
+                },
             ],
         },
         {
-            type: 'stat',
             title: 'Total followers',
-            headlineValue: latestFollowerCount,
+            headlineValue: azureFollowerData.count.current,
             stats: [
-                { text: 'Last 24 hours', value: historicCombinedFollowerData.day.followers },
-                { text: 'Last 7 days', value: historicCombinedFollowerData.week.followers },
+                {
+                    text: 'Last 24 hours',
+                    value: azureFollowerData.count.current - azureFollowerData.count.dayAgo,
+                },
+                {
+                    text: 'Last 7 days',
+                    value: azureFollowerData.count.current - azureFollowerData.count.weekAgo,
+                },
             ],
         },
         {
-            type: 'stat',
             title: 'Posts published',
-            headlineValue: latestCombinedArticleStats.publishedPosts,
+            headlineValue: numArticlesPublished,
             stats: [
                 {
                     text: 'Last posted',
@@ -52,7 +81,7 @@ export const getOverviewStats = (
                 },
                 {
                     text: 'Last 30 days',
-                    value: `${historicCombinedArticleData.month.publishedPosts}`,
+                    value: `${numArticlesPublishedInLastMonth}`,
                 },
             ],
         },

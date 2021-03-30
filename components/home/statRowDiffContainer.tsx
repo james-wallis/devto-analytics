@@ -1,4 +1,4 @@
-import IArticleRowStat from '../interfaces/IArticleRowStat'
+import IArticleRowStat from '../../interfaces/IArticleRowStat'
 import StatRow from './statRow'
 
 interface IProps {

@@ -2,7 +2,8 @@
     "name": "devto-analytics",
     "version": "1.0.0",
     "scripts": {
-        "dev": "NODE_OPTIONS='--inspect' next dev",
+        "dev": "next dev",
+        "debug": "NODE_OPTIONS='--inspect' next dev",
         "build": "next build",
         "start": "next start",
         "type-check": "tsc --project tsconfig.json --pretty --noEmit",

@@ -3,33 +3,27 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import { ReactNode, useState } from 'react'
-import ArticleCard from '../components/articleCard'
 
-import Layout from '../components/Layout'
-import Select from '../components/select'
-import SideNav from '../components/sideNav'
-import StatGrid from '../components/statGrid'
-import IArticle, { IArticleWithDiffs } from '../interfaces/IArticle'
+import ArticleCard from '../components/home/articleCard'
+import Layout from '../components/common/Layout'
+import Select from '../components/common/select'
+import SideNav from '../components/common/sideNav'
+import StatGrid from '../components/overview/overviewGrid'
 import IAzureArticleData from '../interfaces/IAzureArticleData'
 import IAzureFollowerData from '../interfaces/IAzureFollowerData'
-import ICombinedArticleStats from '../interfaces/ICombinedArticleStats'
-import IFollower from '../interfaces/IFollower'
-import IHistoricalArticleData from '../interfaces/IHistoricalArticleData'
-import IHistoricalFollowerData from '../interfaces/IHistoricalFollowerData'
+import IArticleWithDiffs from '../interfaces/IArticleWithDiffs'
+import IArticleWithHistoricalData from '../interfaces/IArticle'
 import IOverviewStats from '../interfaces/IOverviewStats'
 import ISelectOption from '../interfaces/ISelectOption'
 import IUser from '../interfaces/IUser'
 import { getAzureArticleData, getAzureFollowerData } from '../lib/azure'
-import { getArticles, getFollowers, getUser } from '../lib/devto'
+import { getUser } from '../lib/devto'
 import { changePage, getPageLinks } from '../lib/navigation'
 import {
-    getCombinedArticleViewsReactionsComments,
-    getHistorialDiffsForLatestArticles,
-    getHistoricalArticleDataForOverview,
+    addDiffsToArticle,
     getLatestPublishedArticle,
     getPublishedArticles,
 } from '../lib/utils/articles'
-import { getHistoricalFollowerDataForOverview } from '../lib/utils/followers'
 import { getOverviewStats } from '../lib/utils/overview'
 import { sortArticlesWithDiff } from '../lib/utils/sorting'
 import { DiffTypes } from '../types'
@@ -39,9 +33,7 @@ dayjs.extend(relativeTime)
 
 interface IProps {
     azureArticleData: IAzureArticleData
-    latestArticles: IArticle[]
     azureFollowerData: IAzureFollowerData
-    latestFollowers: IFollower[]
     user: IUser
 }
 
@@ -59,49 +51,27 @@ const diffSelectionOpts: ISelectOption[] = [
     { text: 'Past month', value: 'month' as DiffTypes },
 ]
 
-const IndexPage = ({
-    azureArticleData,
-    latestArticles,
-    azureFollowerData,
-    latestFollowers,
-    user,
-}: IProps): ReactNode => {
+const IndexPage = ({ azureArticleData, azureFollowerData, user }: IProps): ReactNode => {
     const [articleSortingOrder, setArticleSortingOrder] = useState(articleSelectOpts[0].value)
     const [diffSortingOrder, setDiffSortingOrder] = useState(diffSelectionOpts[0].value)
 
-    const publishedArticles = getPublishedArticles(latestArticles)
+    const publishedArticles: IArticleWithHistoricalData[] = getPublishedArticles(
+        azureArticleData.articles
+    )
+
+    const articlesWithDiffs: IArticleWithDiffs[] = addDiffsToArticle(publishedArticles)
 
     const latestArticle = getLatestPublishedArticle(publishedArticles)
 
-    // Add the day, week, month diffs into the latestArticles
-    const latestArticlesWithDiffs: IArticleWithDiffs[] = getHistorialDiffsForLatestArticles(
-        publishedArticles,
-        azureArticleData
-    )
-
-    const latestCombinedArticleStats: ICombinedArticleStats = getCombinedArticleViewsReactionsComments(
-        latestArticles
-    )
-
-    const historicCombinedArticleData: IHistoricalArticleData = getHistoricalArticleDataForOverview(
-        azureArticleData,
-        latestArticles
-    )
-    const historicCombinedFollowerData: IHistoricalFollowerData = getHistoricalFollowerDataForOverview(
-        azureFollowerData,
-        latestFollowers
-    )
-
     const overviewStats: IOverviewStats[] = getOverviewStats(
         latestArticle,
-        latestCombinedArticleStats,
-        historicCombinedArticleData,
-        historicCombinedFollowerData,
-        latestFollowers.length
+        azureArticleData,
+        azureFollowerData,
+        publishedArticles.length
     )
 
     const sortedArticles: IArticleWithDiffs[] = sortArticlesWithDiff(
-        latestArticlesWithDiffs,
+        articlesWithDiffs,
         articleSortingOrder,
         diffSortingOrder as DiffTypes | ''
     )
@@ -122,7 +92,7 @@ const IndexPage = ({
                 <StatGrid stats={overviewStats} />
             </div>
             <div className="grid md:grid-cols-5 md:p-4 gap-2 md:gap-4">
-                <SideNav active="posts" numArticles={latestArticles.length} />
+                <SideNav active="posts" numArticles={azureArticleData.articles.length} />
                 <div className="col-span-1 md:col-span-4">
                     <div className="flex flex-row justify-between mb-3 items-center leading-loose">
                         <h2 className="hidden md:block text-xl font-bold">Posts</h2>
@@ -148,9 +118,9 @@ const IndexPage = ({
                                     title,
                                     url,
                                     publishedAt,
-                                    publicReactionsCount,
-                                    commentsCount,
-                                    pageViewsCount,
+                                    reactions,
+                                    comments,
+                                    pageViews,
                                     diffs,
                                 }: IArticleWithDiffs,
                                 i: number
@@ -160,9 +130,9 @@ const IndexPage = ({
                                     title={title}
                                     url={url}
                                     publishedAt={publishedAt}
-                                    publicReactionsCount={publicReactionsCount}
-                                    commentsCount={commentsCount}
-                                    pageViewsCount={pageViewsCount}
+                                    reactionsCount={reactions.current}
+                                    commentsCount={comments.current}
+                                    pageViewsCount={pageViews.current}
                                     diffs={diffs}
                                     border={i !== 0}
                                 />
@@ -176,24 +146,18 @@ const IndexPage = ({
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-    const promises: Promise<
-        IAzureArticleData | IArticle[] | IAzureFollowerData | IFollower[] | IUser
-    >[] = [getAzureArticleData(), getArticles(), getAzureFollowerData(), getFollowers(), getUser()]
+    const promises: Promise<IAzureArticleData | IAzureFollowerData | IUser>[] = [
+        getAzureArticleData(),
+        getAzureFollowerData(),
+        getUser(),
+    ]
 
-    const [
-        azureArticleData,
-        latestArticles,
-        azureFollowerData,
-        latestFollowers,
-        user,
-    ] = await Promise.all(promises)
+    const [azureArticleData, azureFollowerData, user] = await Promise.all(promises)
 
     return {
         props: {
             azureArticleData,
-            latestArticles,
             azureFollowerData,
-            latestFollowers,
             user,
         },
         // revalidate: 60, // In seconds

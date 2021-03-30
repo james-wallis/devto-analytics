@@ -2,7 +2,6 @@ import axios, { AxiosResponse } from 'axios'
 import dayjs from 'dayjs'
 import IAzureArticleData from '../interfaces/IAzureArticleData'
 import IAzureFollowerData from '../interfaces/IAzureFollowerData'
-import { parseAzureArticleData, parseAzureFollowerData } from './utils/parse'
 
 export const getAzureArticleData = async (): Promise<IAzureArticleData> => {
     const headers = { 'x-functions-key': process.env['AZURE_ARTICLES_CODE'] }
@@ -14,8 +13,7 @@ export const getAzureArticleData = async (): Promise<IAzureArticleData> => {
             params,
         }
     )
-    const azureArticleData: IAzureArticleData = parseAzureArticleData(data)
-    return azureArticleData
+    return data
 }
 
 export const getAzureFollowerData = async (): Promise<IAzureFollowerData> => {
@@ -28,6 +26,5 @@ export const getAzureFollowerData = async (): Promise<IAzureFollowerData> => {
             params,
         }
     )
-    const azureFollowerData: IAzureFollowerData = parseAzureFollowerData(data)
-    return azureFollowerData
+    return data
 }

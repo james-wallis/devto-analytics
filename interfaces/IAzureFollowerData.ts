@@ -1,15 +1,7 @@
-import IFollower from './IFollower'
-
-export interface IAzureFollowerObject {
-    fetchedAt: string
-    count: number
-    followers: IFollower[]
-}
+import IHistoricalData from './IHistoricalData'
 
 interface IAzureFollowerData {
-    day: IAzureFollowerObject
-    week: IAzureFollowerObject
-    month: IAzureFollowerObject
+    count: IHistoricalData
 }
 
 export default IAzureFollowerData

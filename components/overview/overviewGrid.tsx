@@ -1,16 +1,15 @@
-import IOverviewStats from '../interfaces/IOverviewStats'
-import StatCard from './statCard'
+import IOverviewStats from '../../interfaces/IOverviewStats'
+import StatCard from './overviewCard'
 
 interface IProps {
     stats: IOverviewStats[]
 }
 
-const StatGrid = ({ stats }: IProps): JSX.Element => (
+const OverviewGrid = ({ stats }: IProps): JSX.Element => (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 mt-2 md:mt-0">
-        {stats.map(({ type, title, subtitle, headlineValue, stats }: IOverviewStats) => (
+        {stats.map(({ title, subtitle, headlineValue, stats }: IOverviewStats) => (
             <StatCard
                 key={title}
-                type={type}
                 title={title}
                 subtitle={subtitle}
                 headlineValue={headlineValue}
@@ -20,4 +19,4 @@ const StatGrid = ({ stats }: IProps): JSX.Element => (
     </div>
 )
 
-export default StatGrid
+export default OverviewGrid

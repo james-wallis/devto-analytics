@@ -19,7 +19,11 @@ import IUser from '../interfaces/IUser'
 import { getAzureArticleData, getAzureFollowerData } from '../lib/azure'
 import { getUser } from '../lib/devto'
 import { changePage, getPageLinks } from '../lib/navigation'
-import { getLatestPublishedArticle, getPublishedArticles } from '../lib/utils/articles'
+import {
+    addDiffsToArticle,
+    getLatestPublishedArticle,
+    getPublishedArticles,
+} from '../lib/utils/articles'
 import { getOverviewStats } from '../lib/utils/overview'
 import { sortArticlesWithDiff } from '../lib/utils/sorting'
 import { DiffTypes } from '../types'
@@ -55,32 +59,9 @@ const IndexPage = ({ azureArticleData, azureFollowerData, user }: IProps): React
         azureArticleData.articles
     )
 
-    const articlesWithDiffs: IArticleWithDiffs[] = publishedArticles.map((article) => {
-        return {
-            ...article,
-            diffs: {
-                day: {
-                    pageViews: article.pageViews.current - article.pageViews.dayAgo,
-                    reactions: article.reactions.current - article.reactions.dayAgo,
-                    comments: article.comments.current - article.comments.dayAgo,
-                },
-                week: {
-                    pageViews: article.pageViews.current - article.pageViews.weekAgo,
-                    reactions: article.reactions.current - article.reactions.weekAgo,
-                    comments: article.comments.current - article.comments.weekAgo,
-                },
-                month: {
-                    pageViews: article.pageViews.current - article.pageViews.monthAgo,
-                    reactions: article.reactions.current - article.reactions.monthAgo,
-                    comments: article.comments.current - article.comments.monthAgo,
-                },
-            },
-        }
-    })
+    const articlesWithDiffs: IArticleWithDiffs[] = addDiffsToArticle(publishedArticles)
 
     const latestArticle = getLatestPublishedArticle(publishedArticles)
-
-    // Add the day, week, month diffs into the latestArticles
 
     const overviewStats: IOverviewStats[] = getOverviewStats(
         latestArticle,

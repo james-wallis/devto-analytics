@@ -18,7 +18,7 @@ const Layout = ({ children, title = 'This is the default title', user }: IProps)
         </Head>
         <Header user={user} />
         <main className="max-w-site m-auto">{children}</main>
-        <footer className="h-36 flex items-end justify-center mb-6"></footer>
+        <footer className="h-10 flex items-end justify-center mb-6"></footer>
     </div>
 )
 

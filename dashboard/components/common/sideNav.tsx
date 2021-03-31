@@ -3,13 +3,13 @@ import { getPageLinks } from '../../lib/navigation'
 
 interface IProps {
     numArticles: number
-    active: 'posts' | 'graphs'
+    active: 'posts' | 'breakdown-graphs' | 'summary-graphs'
 }
 
 const SideNav = ({ numArticles, active }: IProps): JSX.Element => (
     <aside>
         <nav className="hidden md:block">
-            {getPageLinks(numArticles, 4).map(({ text, href, value, flairValue }) => (
+            {getPageLinks(numArticles).map(({ text, href, value, flairValue }) => (
                 <Link key={`side-nav-${href}`} href={href}>
                     <a
                         className={`

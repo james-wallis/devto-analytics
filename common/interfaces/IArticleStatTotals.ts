@@ -1,4 +1,5 @@
 interface IArticleStatTotals {
+    articles: number;
     published: number;
     pageViews: number;
     comments: number;

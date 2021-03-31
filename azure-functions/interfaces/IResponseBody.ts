@@ -1,3 +1,5 @@
+import IDevToArticle from "./IDevToArticle";
+
 interface IReponseBody {
     type: 'articles' | 'followers';
     fetchedAt: string;
@@ -5,7 +7,7 @@ interface IReponseBody {
 }
 
 export interface ICosmosArticlesReponseBody extends IReponseBody {
-    articles: object[];
+    articles: IDevToArticle[];
 }
 
 export interface ICosmosFollowersReponseBody extends IReponseBody {

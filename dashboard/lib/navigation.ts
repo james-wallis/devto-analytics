@@ -5,17 +5,17 @@ export const getPageLinks = (numArticles: number): IPageLink[] => {
     return [
         { text: 'Posts', value: 'posts', href: '/', flairValue: numArticles },
         {
-            text: 'Breakdowns graphs',
+            text: 'Breakdown graphs',
             value: 'breakdown-graphs',
             href: '/graphs/breakdown',
             flairValue: 10,
         },
-        // {
-        //     text: 'Summary graphs',
-        //     value: 'summary-graphs',
-        //     href: '/graphs/summary',
-        //     flairValue: 4,
-        // },
+        {
+            text: 'Summary graphs',
+            value: 'summary-graphs',
+            href: '/graphs/summary',
+            flairValue: 3,
+        },
     ]
 }
 

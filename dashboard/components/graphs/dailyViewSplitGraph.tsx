@@ -103,9 +103,9 @@ const DailyViewSplitGraph = ({ articlesWithDiffs }: IProps): JSX.Element => {
     return (
         <>
             {sections.map(({ heading, charts }) => (
-                <div key={`daily-view-split-graph-${heading}`} className="w-full p-4">
+                <div key={`daily-view-split-graph-${heading}`} className="w-full p-2 md:p-4">
                     <h3 className="font-bold text-devto-h3">{heading}</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full text-center py-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 w-full text-center py-2">
                         {charts.map(({ title, total, data }, i: number) => (
                             <BreakdownChart
                                 key={`${heading}-${title}`}

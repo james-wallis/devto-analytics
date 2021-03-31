@@ -1,5 +1,7 @@
+import React from 'react'
 import IAzureArticleData from '../../../common/interfaces/IAzureArticleData'
 import IAzureFollowerData from '../../../common/interfaces/IAzureFollowerData'
+import DailyViewSplitGraph from './dailyViewSplitGraph'
 
 interface IProps {
     azureArticleData: IAzureArticleData
@@ -9,12 +11,11 @@ interface IProps {
 const GraphContainer = ({ azureArticleData, azureFollowerData }: IProps): JSX.Element => {
     console.log(azureArticleData, azureFollowerData)
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
-            {/* <ArticleStatViewReaction title="Post view difference" data={articleData} daily />
-            <ArticleStatViewReaction title="Post reaction difference" data={articleData} reaction />
-            <ArticleStatShare title="Article Stat Share" articles={latestArticles} />
-            <FollowerStat data={followerData} latestFollowers={latestFollowers} /> */}
-            coming soon!
+        <div className="">
+            <DailyViewSplitGraph
+                azureArticleData={azureArticleData}
+                azureFollowerData={azureFollowerData}
+            />
         </div>
     )
 }

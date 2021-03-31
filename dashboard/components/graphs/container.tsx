@@ -1,7 +1,6 @@
 import React from 'react'
 import IAzureArticleData from '../../../common/interfaces/IAzureArticleData'
 import IAzureFollowerData from '../../../common/interfaces/IAzureFollowerData'
-import DailyViewSplitGraph from './dailyViewSplitGraph'
 
 interface IProps {
     azureArticleData: IAzureArticleData
@@ -10,14 +9,7 @@ interface IProps {
 
 const GraphContainer = ({ azureArticleData, azureFollowerData }: IProps): JSX.Element => {
     console.log(azureArticleData, azureFollowerData)
-    return (
-        <div className="">
-            <DailyViewSplitGraph
-                azureArticleData={azureArticleData}
-                azureFollowerData={azureFollowerData}
-            />
-        </div>
-    )
+    return <div className=""></div>
 }
 
 export default GraphContainer

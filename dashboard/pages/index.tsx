@@ -74,7 +74,7 @@ const IndexPage = ({ azureArticleData, azureFollowerData, user }: IProps): React
         diffSortingOrder as DiffTypes | ''
     )
 
-    const pageLinks = getPageLinks(publishedArticles.length, 4)
+    const pageLinks = getPageLinks(publishedArticles.length)
     const router = useRouter()
     return (
         <Layout title="Analytics Dashboard" user={user}>
@@ -86,6 +86,7 @@ const IndexPage = ({ azureArticleData, azureFollowerData, user }: IProps): React
                     options={pageLinks}
                     className="md:hidden"
                     onChange={(e) => changePage(e.target.value, pageLinks, router)}
+                    selected="posts"
                 />
                 <StatGrid stats={overviewStats} />
             </div>

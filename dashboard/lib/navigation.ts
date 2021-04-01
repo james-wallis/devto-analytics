@@ -14,7 +14,7 @@ export const getPageLinks = (numArticles: number): IPageLink[] => {
             text: 'Summary graphs',
             value: 'summary-graphs',
             href: '/graphs/summary',
-            flairValue: 3,
+            flairValue: 6,
         },
     ]
 }

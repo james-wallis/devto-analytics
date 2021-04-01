@@ -5,10 +5,12 @@ interface IProps {
     options: ISelectOption[]
     onChange: (e: ChangeEvent<HTMLSelectElement>) => void
     className?: string
+    selected?: string
 }
 
-const Select = ({ options, onChange, className = '' }: IProps): JSX.Element => (
+const Select = ({ options, onChange, className = '', selected }: IProps): JSX.Element => (
     <select
+        value={selected}
         onChange={onChange}
         className={`
             p-2 pr-8 relative text-base bg-form-background-color border-form-border-color

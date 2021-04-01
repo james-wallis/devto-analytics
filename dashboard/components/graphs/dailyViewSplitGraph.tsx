@@ -1,5 +1,6 @@
 import React from 'react'
 import IArticleWithDiffs from '../../interfaces/IArticleWithDiffs'
+import IGraphData from '../../interfaces/IGraphData'
 import { DiffTypes } from '../../types'
 import BreakdownChart from './breakdownChart'
 
@@ -11,9 +12,9 @@ const getData = (
     articles: IArticleWithDiffs[],
     diff: DiffTypes | 'allTime',
     type: 'pageViews' | 'comments' | 'reactions'
-): { data: { name: string; value: number }[]; total: number } => {
+): { data: IGraphData[]; total: number } => {
     if (diff === 'allTime') {
-        const allTimeData: { name: string; value: number }[] = articles
+        const allTimeData: IGraphData[] = articles
             .map((article) => ({
                 name: article.title,
                 value: article[type].current,
@@ -28,7 +29,7 @@ const getData = (
     const filteredArticles: IArticleWithDiffs[] = articles.filter(
         ({ diffs }) => diffs[diff][type] > 0
     )
-    const data: { name: string; value: number }[] = filteredArticles
+    const data: IGraphData[] = filteredArticles
         .map(({ title, diffs }) => ({
             name: title,
             value: diffs[diff][type],

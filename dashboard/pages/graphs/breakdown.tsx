@@ -41,6 +41,7 @@ const BreakdownGraphPage = ({ azureArticleData, user }: IProps): ReactNode => {
                     options={pageLinks}
                     className="md:hidden w-full"
                     onChange={(e) => changePage(e.target.value, pageLinks, router)}
+                    selected="breakdown-graphs"
                 />
             </div>
             <div className="grid md:grid-cols-5 md:p-4">

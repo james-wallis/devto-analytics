@@ -1,10 +1,11 @@
 import { PieChart, Pie, Tooltip } from 'recharts'
+import IGraphData from '../../interfaces/IGraphData'
 import CustomTooltip from './tooltip'
 
 interface IProps {
     title: string
     total: number
-    data: { name: string; value: number }[]
+    data: IGraphData[]
     colorNum: number
     tooltipValuePrefix: string
 }

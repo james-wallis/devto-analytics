@@ -86,6 +86,7 @@ const IndexPage = ({ azureArticleData, azureFollowerData, user }: IProps): React
                     options={pageLinks}
                     className="md:hidden"
                     onChange={(e) => changePage(e.target.value, pageLinks, router)}
+                    selected="posts"
                 />
                 <StatGrid stats={overviewStats} />
             </div>

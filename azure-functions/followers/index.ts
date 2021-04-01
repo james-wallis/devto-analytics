@@ -8,7 +8,7 @@ const getFollowerDataForGivenDateTime = async (container: Container, dateTime: D
     const dateTimeIso = dateTime.toISOString();
     const dateTimePlusHourIso = dateTime.add(1, 'hour').toISOString();
     const querySpec: SqlQuerySpec = {
-        query: `SELECT * from c WHERE c.type = "followers" AND c.fetchedAt >= "${dateTimeIso}" AND c.fetchedAt < "${dateTimePlusHourIso}" OFFSET 0 LIMIT 1`
+        query: `SELECT c.count from c WHERE c.type = "followers" AND c.fetchedAt >= "${dateTimeIso}" AND c.fetchedAt < "${dateTimePlusHourIso}" OFFSET 0 LIMIT 1`
     };
     const { resources } = await container.items
         .query(querySpec)
@@ -18,7 +18,7 @@ const getFollowerDataForGivenDateTime = async (container: Container, dateTime: D
 
 const getOldestFollowerData = async (container: Container) => {
     const querySpec: SqlQuerySpec = {
-        query: `SELECT * FROM c WHERE c.type = "followers" ORDER BY c.fetchedAt OFFSET 0 LIMIT 1`,
+        query: `SELECT c.count FROM c WHERE c.type = "followers" ORDER BY c.fetchedAt OFFSET 0 LIMIT 1`,
     };
     const { resources } = await container.items
         .query(querySpec)

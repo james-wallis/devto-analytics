@@ -4,9 +4,9 @@ import dayjs from "dayjs";
 import { ICosmosFollowersReponseBody } from "../interfaces/IResponseBody";
 import IAzureHistoricalFollowerData from "../../common/interfaces/IAzureHistoricalFollowerData";
 
-const getAllArticles = async (container: Container): Promise<ICosmosFollowersReponseBody[]> => {
+const getAllFollowers = async (container: Container): Promise<ICosmosFollowersReponseBody[]> => {
     const querySpec: SqlQuerySpec = {
-        query: `SELECT * FROM c WHERE c.type = "followers"`,
+        query: `SELECT c.fetchedAt, c.count FROM c WHERE c.type = "followers"`,
     };
     const { resources } = await container.items
         .query(querySpec)
@@ -14,7 +14,7 @@ const getAllArticles = async (container: Container): Promise<ICosmosFollowersRep
     return resources;
 }
 
-const convertArticleToHistoricalArticleData = ({ fetchedAt, count }: ICosmosFollowersReponseBody): IAzureHistoricalFollowerData['day'][0] | IAzureHistoricalFollowerData['week'][0] => {
+const convertFollowersToHistoricalFollowerData = ({ fetchedAt, count }: ICosmosFollowersReponseBody): IAzureHistoricalFollowerData['day'][0] | IAzureHistoricalFollowerData['week'][0] => {
     return {
         fetchedAt,
         numFollowers: count,
@@ -28,15 +28,15 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
     const database: Database = client.database('devtostats');
     const container: Container = database.container('MyCollection');
 
-    const articles: ICosmosFollowersReponseBody[] = await getAllArticles(container);
+    const followers: ICosmosFollowersReponseBody[] = await getAllFollowers(container);
 
-    const week: IAzureHistoricalFollowerData['week'] = articles
+    const week: IAzureHistoricalFollowerData['week'] = followers
         .filter(({ fetchedAt }) => dayjs(fetchedAt).hour() === 0  && dayjs().subtract(1, 'week').subtract(1, 'day').isBefore(fetchedAt))
-        .map(convertArticleToHistoricalArticleData);
+        .map(convertFollowersToHistoricalFollowerData);
 
-    const day: IAzureHistoricalFollowerData['day'] = articles
+    const day: IAzureHistoricalFollowerData['day'] = followers
         .filter(({ fetchedAt }) => dayjs().subtract(1, 'day').subtract(1, 'hour').isBefore(fetchedAt))
-        .map(convertArticleToHistoricalArticleData);
+        .map(convertFollowersToHistoricalFollowerData);
 
     const body: IAzureHistoricalFollowerData = {
         week,

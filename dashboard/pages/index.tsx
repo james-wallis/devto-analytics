@@ -1,22 +1,21 @@
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { GetServerSideProps } from 'next'
+import { GetStaticProps } from 'next'
 import { useRouter } from 'next/router'
 import { ReactNode, useState } from 'react'
+import useSWR from 'swr'
 
 import ArticleCard from '../components/home/articleCard'
 import Layout from '../components/common/Layout'
 import Select from '../components/common/select'
 import SideNav from '../components/common/sideNav'
 import StatGrid from '../components/overview/overviewGrid'
-import IAzureArticleData from '../../common/interfaces/IAzureArticleData'
-import IAzureFollowerData from '../../common/interfaces/IAzureFollowerData'
 import IArticleWithDiffs from '../interfaces/IArticleWithDiffs'
 import IArticle from '../../common/interfaces/IArticle'
 import IOverviewStats from '../interfaces/IOverviewStats'
 import ISelectOption from '../interfaces/ISelectOption'
 import IUser from '../interfaces/IUser'
-import { getAzureData } from '../lib/azure'
+import { azureDataRoute, getAzureData } from '../lib/azure'
 import { getUser } from '../lib/devto'
 import { changePage, getPageLinks } from '../lib/navigation'
 import {
@@ -27,13 +26,14 @@ import {
 import { getOverviewStats } from '../lib/utils/overview'
 import { sortArticlesWithDiff } from '../lib/utils/sorting'
 import { DiffTypes } from '../types'
+import IAzureData from '../../common/interfaces/IAzureData'
+import fetcher from '../lib/utils/fetcher'
 
 // Add .fromNow (relative times)
 dayjs.extend(relativeTime)
 
 interface IProps {
-    azureArticleData: IAzureArticleData
-    azureFollowerData: IAzureFollowerData
+    azureData: IAzureData
     user: IUser
 }
 
@@ -51,7 +51,12 @@ const diffSelectionOpts: ISelectOption[] = [
     { text: 'Past month', value: 'month' as DiffTypes },
 ]
 
-const IndexPage = ({ azureArticleData, azureFollowerData, user }: IProps): ReactNode => {
+const IndexPage = ({ azureData, user }: IProps): ReactNode => {
+    const { data } = useSWR<IAzureData, Error>(azureDataRoute, fetcher)
+
+    const azureArticleData = data ? data.articles : azureData.articles
+    const azureFollowerData = data ? data.followers : azureData.followers
+
     const [articleSortingOrder, setArticleSortingOrder] = useState(articleSelectOpts[0].value)
     const [diffSortingOrder, setDiffSortingOrder] = useState(diffSelectionOpts[0].value)
 
@@ -144,16 +149,15 @@ const IndexPage = ({ azureArticleData, azureFollowerData, user }: IProps): React
     )
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
     const [azureData, user] = await Promise.all([getAzureData(), getUser()])
 
     return {
         props: {
-            azureArticleData: azureData.articles,
-            azureFollowerData: azureData.followers,
+            azureData,
             user,
         },
-        // revalidate: 60, // In seconds
+        revalidate: 60, // In seconds
     }
 }
 

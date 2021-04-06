@@ -1,35 +1,36 @@
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { GetServerSideProps } from 'next'
+import { GetStaticProps } from 'next'
 import React, { ReactNode } from 'react'
 import { FiChevronsRight } from 'react-icons/fi'
+import useSWR from 'swr'
 
 import Layout from '../../components/common/Layout'
 import SideNav from '../../components/common/sideNav'
 import IUser from '../../interfaces/IUser'
-import { getAzureHistoricalData } from '../../lib/azure'
+import { azureHistoricalDataRoute, getAzureHistoricalData } from '../../lib/azure'
 import { getUser } from '../../lib/devto'
-import IAzureHistoricalArticleData from '../../../common/interfaces/IAzureHistoricalArticleData'
 import { useRouter } from 'next/router'
 import Select from '../../components/common/select'
 import { getPageLinks, changePage } from '../../lib/navigation'
 import SummaryGraphs from '../../components/graphs/summaryGraphs'
-import IAzureHistoricalFollowerData from '../../../common/interfaces/IAzureHistoricalFollowerData'
+import IAzureHistoricalData from '../../../common/interfaces/IAzureHistoricalData'
+import fetcher from '../../lib/utils/fetcher'
 
 // Add .fromNow (relative times)
 dayjs.extend(relativeTime)
 
 interface IProps {
-    azureHistoricalArticleData: IAzureHistoricalArticleData
-    azureHistoricalFollowerData: IAzureHistoricalFollowerData
+    azureHistoricalData: IAzureHistoricalData
     user: IUser
 }
 
-const SummaryGraphPage = ({
-    azureHistoricalArticleData,
-    azureHistoricalFollowerData,
-    user,
-}: IProps): ReactNode => {
+const SummaryGraphPage = ({ azureHistoricalData, user }: IProps): ReactNode => {
+    const { data } = useSWR<IAzureHistoricalData, Error>(azureHistoricalDataRoute, fetcher)
+
+    const azureHistoricalArticleData = data ? data.articles : azureHistoricalData.articles
+    const azureHistoricalFollowerData = data ? data.followers : azureHistoricalData.followers
+
     const totalPosts =
         azureHistoricalArticleData.day[azureHistoricalArticleData.day.length - 1].totals.articles
 
@@ -51,9 +52,9 @@ const SummaryGraphPage = ({
                     selected="summary-graphs"
                 />
             </div>
-            <div className="grid md:grid-cols-5 md:p-4 gap-4">
+            <div className="grid md:grid-cols-5 md:p-4">
                 <SideNav active="summary-graphs" numArticles={totalPosts} />
-                <div className="col-span-1 md:col-span-4 flex flex-col px-2 md:px-4 w-screen md:w-full">
+                <div className="col-span-1 md:col-span-4 flex flex-col w-screen md:w-full">
                     <SummaryGraphs
                         azureHistoricalArticleData={azureHistoricalArticleData}
                         azureHistoricalFollowerData={azureHistoricalFollowerData}
@@ -64,16 +65,15 @@ const SummaryGraphPage = ({
     )
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
     const [azureHistoricalData, user] = await Promise.all([getAzureHistoricalData(), getUser()])
 
     return {
         props: {
-            azureHistoricalArticleData: azureHistoricalData.articles,
-            azureHistoricalFollowerData: azureHistoricalData.followers,
+            azureHistoricalData,
             user,
         },
-        // revalidate: 60, // In seconds
+        revalidate: 60, // In seconds
     }
 }
 

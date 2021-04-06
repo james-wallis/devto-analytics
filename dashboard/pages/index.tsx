@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { GetServerSideProps } from 'next'
+import { GetStaticProps } from 'next'
 import { useRouter } from 'next/router'
 import { ReactNode, useState } from 'react'
 
@@ -144,7 +144,7 @@ const IndexPage = ({ azureArticleData, azureFollowerData, user }: IProps): React
     )
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
     const [azureData, user] = await Promise.all([getAzureData(), getUser()])
 
     return {
@@ -153,7 +153,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
             azureFollowerData: azureData.followers,
             user,
         },
-        // revalidate: 60, // In seconds
+        revalidate: 60, // In seconds
     }
 }
 

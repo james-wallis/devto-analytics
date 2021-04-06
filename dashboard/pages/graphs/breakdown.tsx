@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { GetServerSideProps } from 'next'
+import { GetStaticProps } from 'next'
 import React, { ReactNode } from 'react'
 import { FiChevronsRight } from 'react-icons/fi'
 
@@ -54,7 +54,7 @@ const BreakdownGraphPage = ({ azureArticleData, user }: IProps): ReactNode => {
     )
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
     const [azureData, user] = await Promise.all([getAzureData(), getUser()])
 
     return {
@@ -62,7 +62,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
             azureArticleData: azureData.articles,
             user,
         },
-        // revalidate: 60, // In seconds
+        revalidate: 60, // In seconds
     }
 }
 

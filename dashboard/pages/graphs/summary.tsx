@@ -8,7 +8,7 @@ import useSWR from 'swr'
 import Layout from '../../components/common/Layout'
 import SideNav from '../../components/common/sideNav'
 import IUser from '../../interfaces/IUser'
-import { azureHistoricalDataRoute, getAzureHistoricalData } from '../../lib/azure'
+import { getAzureHistoricalData } from '../../lib/azure'
 import { getUser } from '../../lib/devto'
 import { useRouter } from 'next/router'
 import Select from '../../components/common/select'
@@ -26,7 +26,7 @@ interface IProps {
 }
 
 const SummaryGraphPage = ({ azureHistoricalData, user }: IProps): ReactNode => {
-    const { data } = useSWR<IAzureHistoricalData, Error>(azureHistoricalDataRoute, fetcher)
+    const { data } = useSWR<IAzureHistoricalData, Error>('/api/azure/historic', fetcher)
 
     const azureHistoricalArticleData = data ? data.articles : azureHistoricalData.articles
     const azureHistoricalFollowerData = data ? data.followers : azureHistoricalData.followers

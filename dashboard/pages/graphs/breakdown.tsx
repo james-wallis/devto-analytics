@@ -8,7 +8,7 @@ import useSWR from 'swr'
 import Layout from '../../components/common/Layout'
 import SideNav from '../../components/common/sideNav'
 import IUser from '../../interfaces/IUser'
-import { azureDataRoute, getAzureData } from '../../lib/azure'
+import { getAzureData } from '../../lib/azure'
 import { getUser } from '../../lib/devto'
 import IArticleWithDiffs from '../../interfaces/IArticleWithDiffs'
 import { addDiffsToArticle } from '../../lib/utils/articles'
@@ -28,7 +28,7 @@ interface IProps {
 }
 
 const BreakdownGraphPage = ({ azureData, user }: IProps): ReactNode => {
-    const { data } = useSWR<IAzureData, Error>(azureDataRoute, fetcher)
+    const { data } = useSWR<IAzureData, Error>('/api/azure/data', fetcher)
 
     const azureArticleData = data ? data.articles : azureData.articles
 

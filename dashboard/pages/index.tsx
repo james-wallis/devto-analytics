@@ -15,7 +15,7 @@ import IArticle from '../../common/interfaces/IArticle'
 import IOverviewStats from '../interfaces/IOverviewStats'
 import ISelectOption from '../interfaces/ISelectOption'
 import IUser from '../interfaces/IUser'
-import { azureDataRoute, getAzureData } from '../lib/azure'
+import { getAzureData } from '../lib/azure'
 import { getUser } from '../lib/devto'
 import { changePage, getPageLinks } from '../lib/navigation'
 import {
@@ -52,7 +52,7 @@ const diffSelectionOpts: ISelectOption[] = [
 ]
 
 const IndexPage = ({ azureData, user }: IProps): ReactNode => {
-    const { data } = useSWR<IAzureData, Error>(azureDataRoute, fetcher)
+    const { data } = useSWR<IAzureData, Error>('/api/azure/data', fetcher)
 
     const azureArticleData = data ? data.articles : azureData.articles
     const azureFollowerData = data ? data.followers : azureData.followers

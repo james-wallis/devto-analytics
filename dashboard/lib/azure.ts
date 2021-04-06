@@ -3,8 +3,8 @@ import dayjs from 'dayjs'
 import IAzureData from '../../common/interfaces/IAzureData'
 import IAzureHistoricalData from '../../common/interfaces/IAzureHistoricalData'
 
-export const azureDataRoute = 'https://jwdevtoanalytics.azurewebsites.net/api/data'
-export const azureHistoricalDataRoute = 'https://jwdevtoanalytics.azurewebsites.net/api/historical'
+const azureDataRoute = 'https://jwdevtoanalytics.azurewebsites.net/api/data'
+const azureHistoricalDataRoute = 'https://jwdevtoanalytics.azurewebsites.net/api/historical'
 
 export const getAzureData = async (): Promise<IAzureData> => {
     const headers = { 'x-functions-key': process.env['AZURE_CODE'] }

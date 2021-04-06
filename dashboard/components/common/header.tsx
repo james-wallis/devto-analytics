@@ -27,14 +27,14 @@ const Header = ({ user }: IProps): JSX.Element => (
                         text-button-primary-color hover:text-button-primary-color-hover
                         transition-colors font-medium
                     "
-                    href="https://dev.to/jameswallis"
+                    href="https://dev.to/jameswallis/i-built-a-dev-to-analytics-dashboard-to-track-historic-post-data-2c7o"
                     target="_blank"
                     rel="noreferrer noopener"
                 >
                     Read the post
                 </a>
                 <a
-                    href="https://wallis.dev"
+                    href="https://dev.to/jameswallis/i-built-a-dev-to-analytics-dashboard-to-track-historic-post-data-2c7o"
                     className="mx-1 p-2 rounded-full hover:bg-ghost-light-hover transition-colors"
                     target="_blank"
                     rel="noreferrer noopener"

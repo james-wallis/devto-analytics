@@ -6,17 +6,23 @@ import IAzureHistoricalData from '../../common/interfaces/IAzureHistoricalData'
 export const getAzureData = async (): Promise<IAzureData> => {
     const headers = { 'x-functions-key': process.env['AZURE_CODE'] }
     const params = { date: dayjs().toISOString() }
-    const { data }: AxiosResponse = await axios.get('http://localhost:7071/api/data', {
-        headers,
-        params,
-    })
+    const { data }: AxiosResponse = await axios.get(
+        'https://jwdevtoanalytics.azurewebsites.net/api/data',
+        {
+            headers,
+            params,
+        }
+    )
     return data
 }
 
 export const getAzureHistoricalData = async (): Promise<IAzureHistoricalData> => {
     const headers = { 'x-functions-key': process.env['AZURE_CODE'] }
-    const { data }: AxiosResponse = await axios.get('http://localhost:7071/api/historical', {
-        headers,
-    })
+    const { data }: AxiosResponse = await axios.get(
+        'https://jwdevtoanalytics.azurewebsites.net/api/historical',
+        {
+            headers,
+        }
+    )
     return data
 }

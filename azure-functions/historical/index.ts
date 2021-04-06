@@ -1,17 +1,30 @@
-import { AzureFunction, Context, HttpRequest } from "@azure/functions"
-import { Container } from "@azure/cosmos";
-import dayjs from "dayjs";
-import { ICosmosArticlesReponseBody, ICosmosFollowersReponseBody } from "../interfaces/IResponseBody";
-import IAzureHistoricalArticleData from "../../common/interfaces/IAzureHistoricalArticleData";
-import IArticleStatTotals from "../../common/interfaces/IArticleStatTotals";
-import IAzureHistoricalFollowerData from "../../common/interfaces/IAzureHistoricalFollowerData";
-import IAzureHistoricalData from "../../common/interfaces/IAzureHistoricalData";
-import { getAllArticlesFromCosmosDB, getAllFollowersFromCosmosDB, getCosmosDBContainer } from "../lib/utils/cosmos";
+import { AzureFunction, Context } from '@azure/functions'
+import { Container } from '@azure/cosmos'
+import dayjs from 'dayjs'
+import {
+    ICosmosArticlesReponseBody,
+    ICosmosFollowersReponseBody,
+} from '../interfaces/IResponseBody'
+import IAzureHistoricalArticleData from '../../common/interfaces/IAzureHistoricalArticleData'
+import IArticleStatTotals from '../../common/interfaces/IArticleStatTotals'
+import IAzureHistoricalFollowerData from '../../common/interfaces/IAzureHistoricalFollowerData'
+import IAzureHistoricalData from '../../common/interfaces/IAzureHistoricalData'
+import {
+    getAllArticlesFromCosmosDB,
+    getAllFollowersFromCosmosDB,
+    getCosmosDBContainer,
+} from '../lib/utils/cosmos'
 
-const convertArticleToHistoricalArticleData = ({ fetchedAt, articles }: ICosmosArticlesReponseBody): IAzureHistoricalArticleData['day'][0] | IAzureHistoricalArticleData['week'][0] => {
+const convertArticleToHistoricalArticleData = ({
+    fetchedAt,
+    articles,
+}: ICosmosArticlesReponseBody):
+    | IAzureHistoricalArticleData['day'][0]
+    | IAzureHistoricalArticleData['week'][0] => {
     const initialTotals: IArticleStatTotals = {
         articles: articles.length,
-        published: articles.filter(({ published, published_at }) => published && published_at).length,
+        published: articles.filter(({ published, published_at }) => published && published_at)
+            .length,
         pageViews: 0,
         comments: 0,
         reactions: 0,
@@ -31,33 +44,48 @@ const convertArticleToHistoricalArticleData = ({ fetchedAt, articles }: ICosmosA
     }
 }
 
-const convertFollowersToHistoricalFollowerData = ({ fetchedAt, count }: ICosmosFollowersReponseBody): IAzureHistoricalFollowerData['day'][0] | IAzureHistoricalFollowerData['week'][0] => {
+const convertFollowersToHistoricalFollowerData = ({
+    fetchedAt,
+    count,
+}: ICosmosFollowersReponseBody):
+    | IAzureHistoricalFollowerData['day'][0]
+    | IAzureHistoricalFollowerData['week'][0] => {
     return {
         fetchedAt,
         numFollowers: count,
     }
 }
 
-const filterForDay = (fetchedAt: string) => dayjs().subtract(1, 'day').subtract(1, 'hour').isBefore(fetchedAt);
+const filterForDay = (fetchedAt: string): boolean =>
+    dayjs().subtract(1, 'day').subtract(1, 'hour').isBefore(fetchedAt)
 
-const filterForWeek = (fetchedAt: string) => dayjs(fetchedAt).hour() === 0  && dayjs().subtract(1, 'week').subtract(1, 'day').isBefore(fetchedAt);
+const filterForWeek = (fetchedAt: string): boolean =>
+    dayjs(fetchedAt).hour() === 0 &&
+    dayjs().subtract(1, 'week').subtract(1, 'day').isBefore(fetchedAt)
 
-const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
-    const container: Container = getCosmosDBContainer();
+const httpTrigger: AzureFunction = async function (context: Context): Promise<void> {
+    const container: Container = getCosmosDBContainer()
 
-    const [articles, followers] = await Promise.all([getAllArticlesFromCosmosDB(container), getAllFollowersFromCosmosDB(container)]);
+    const [articles, followers] = await Promise.all([
+        getAllArticlesFromCosmosDB(container),
+        getAllFollowersFromCosmosDB(container),
+    ])
 
     const articleWeek: IAzureHistoricalArticleData['week'] = articles
-        .filter(({ fetchedAt }) => filterForWeek(fetchedAt)).map(convertArticleToHistoricalArticleData);
+        .filter(({ fetchedAt }) => filterForWeek(fetchedAt))
+        .map(convertArticleToHistoricalArticleData)
 
     const articleDay: IAzureHistoricalArticleData['day'] = articles
-        .filter(({ fetchedAt }) => filterForDay(fetchedAt)).map(convertArticleToHistoricalArticleData);
+        .filter(({ fetchedAt }) => filterForDay(fetchedAt))
+        .map(convertArticleToHistoricalArticleData)
 
     const followerWeek: IAzureHistoricalFollowerData['week'] = followers
-        .filter(({ fetchedAt }) => filterForWeek(fetchedAt)).map(convertFollowersToHistoricalFollowerData);
+        .filter(({ fetchedAt }) => filterForWeek(fetchedAt))
+        .map(convertFollowersToHistoricalFollowerData)
 
     const followerDay: IAzureHistoricalFollowerData['day'] = followers
-        .filter(({ fetchedAt }) => filterForDay(fetchedAt)).map(convertFollowersToHistoricalFollowerData);
+        .filter(({ fetchedAt }) => filterForDay(fetchedAt))
+        .map(convertFollowersToHistoricalFollowerData)
 
     const body: IAzureHistoricalData = {
         articles: {
@@ -72,9 +100,8 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
 
     context.res = {
         body,
-    };
-    return;
+    }
+    return
+}
 
-};
-
-export default httpTrigger;
+export default httpTrigger

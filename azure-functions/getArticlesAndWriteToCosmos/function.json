@@ -1,26 +1,26 @@
 {
-  "bindings": [
-    {
-      "schedule": "0 0 * * * *",
-      "name": "myTimer1",
-      "type": "timerTrigger",
-      "direction": "in"
-    },
-    {
-      "type": "http",
-      "direction": "out",
-      "name": "res"
-    },
-    {
-      "type": "cosmosDB",
-      "direction": "out",
-      "name": "outputDocument",
-      "databaseName": "devtostats",
-      "collectionName": "MyCollection",
-      "createIfNotExists": "true",
-      "connectionStringSetting": "jwdevtoanalytics_DOCUMENTDB",
-      "partitionKey": "/type"
-    }
-  ],
-  "scriptFile": "../dist/getArticlesAndWriteToCosmos/index.js"
+    "bindings": [
+        {
+            "schedule": "0 0 * * * *",
+            "name": "myTimer1",
+            "type": "timerTrigger",
+            "direction": "in"
+        },
+        {
+            "type": "http",
+            "direction": "out",
+            "name": "res"
+        },
+        {
+            "type": "cosmosDB",
+            "direction": "out",
+            "name": "outputDocument",
+            "databaseName": "devtostats",
+            "collectionName": "MyCollection",
+            "createIfNotExists": "true",
+            "connectionStringSetting": "jwdevtoanalytics_DOCUMENTDB",
+            "partitionKey": "/type"
+        }
+    ],
+    "scriptFile": "../dist/getArticlesAndWriteToCosmos/index.js"
 }

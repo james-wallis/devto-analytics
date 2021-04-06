@@ -8,7 +8,7 @@ import Layout from '../../components/common/Layout'
 import SideNav from '../../components/common/sideNav'
 import IAzureArticleData from '../../../common/interfaces/IAzureArticleData'
 import IUser from '../../interfaces/IUser'
-import { getAzureArticleData } from '../../lib/azure'
+import { getAzureData } from '../../lib/azure'
 import { getUser } from '../../lib/devto'
 import IArticleWithDiffs from '../../interfaces/IArticleWithDiffs'
 import { addDiffsToArticle } from '../../lib/utils/articles'
@@ -55,13 +55,11 @@ const BreakdownGraphPage = ({ azureArticleData, user }: IProps): ReactNode => {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-    const promises: Promise<IAzureArticleData | IUser>[] = [getAzureArticleData(), getUser()]
-
-    const [azureArticleData, user] = await Promise.all(promises)
+    const [azureData, user] = await Promise.all([getAzureData(), getUser()])
 
     return {
         props: {
-            azureArticleData,
+            azureArticleData: azureData.articles,
             user,
         },
         // revalidate: 60, // In seconds

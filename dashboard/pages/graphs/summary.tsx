@@ -7,7 +7,7 @@ import { FiChevronsRight } from 'react-icons/fi'
 import Layout from '../../components/common/Layout'
 import SideNav from '../../components/common/sideNav'
 import IUser from '../../interfaces/IUser'
-import { getAzureHistoricalArticleData, getAzureHistoricalFollowerData } from '../../lib/azure'
+import { getAzureHistoricalData } from '../../lib/azure'
 import { getUser } from '../../lib/devto'
 import IAzureHistoricalArticleData from '../../../common/interfaces/IAzureHistoricalArticleData'
 import { useRouter } from 'next/router'
@@ -65,18 +65,12 @@ const SummaryGraphPage = ({
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-    const promises: Promise<
-        IAzureHistoricalArticleData | IAzureHistoricalFollowerData | IUser
-    >[] = [getAzureHistoricalArticleData(), getAzureHistoricalFollowerData(), getUser()]
-
-    const [azureHistoricalArticleData, azureHistoricalFollowerData, user] = await Promise.all(
-        promises
-    )
+    const [azureHistoricalData, user] = await Promise.all([getAzureHistoricalData(), getUser()])
 
     return {
         props: {
-            azureHistoricalArticleData,
-            azureHistoricalFollowerData,
+            azureHistoricalArticleData: azureHistoricalData.articles,
+            azureHistoricalFollowerData: azureHistoricalData.followers,
             user,
         },
         // revalidate: 60, // In seconds

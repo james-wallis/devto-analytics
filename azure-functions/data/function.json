@@ -15,5 +15,5 @@
       "name": "res"
     }
   ],
-  "scriptFile": "../dist/historicalFollowers/index.js"
+  "scriptFile": "../dist/data/index.js"
 }

@@ -16,7 +16,7 @@ import IArticle from '../../common/interfaces/IArticle'
 import IOverviewStats from '../interfaces/IOverviewStats'
 import ISelectOption from '../interfaces/ISelectOption'
 import IUser from '../interfaces/IUser'
-import { getAzureArticleData, getAzureFollowerData } from '../lib/azure'
+import { getAzureData } from '../lib/azure'
 import { getUser } from '../lib/devto'
 import { changePage, getPageLinks } from '../lib/navigation'
 import {
@@ -145,18 +145,12 @@ const IndexPage = ({ azureArticleData, azureFollowerData, user }: IProps): React
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-    const promises: Promise<IAzureArticleData | IAzureFollowerData | IUser>[] = [
-        getAzureArticleData(),
-        getAzureFollowerData(),
-        getUser(),
-    ]
-
-    const [azureArticleData, azureFollowerData, user] = await Promise.all(promises)
+    const [azureData, user] = await Promise.all([getAzureData(), getUser()])
 
     return {
         props: {
-            azureArticleData,
-            azureFollowerData,
+            azureArticleData: azureData.articles,
+            azureFollowerData: azureData.followers,
             user,
         },
         // revalidate: 60, // In seconds

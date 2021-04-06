@@ -1,6 +1,6 @@
 import { AzureFunction, Context } from "@azure/functions"
 import { ICosmosFollowersReponseBody } from "../interfaces/IResponseBody";
-import { getFollowers } from "../lib/devto";
+import { getFollowers } from "../lib/utils/devto";
 
 const httpTrigger: AzureFunction = async function (context: Context): Promise<void> {
     const followers = await getFollowers();

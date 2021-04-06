@@ -3,12 +3,12 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import { GetStaticProps } from 'next'
 import React, { ReactNode } from 'react'
 import { FiChevronsRight } from 'react-icons/fi'
+import useSWR from 'swr'
 
 import Layout from '../../components/common/Layout'
 import SideNav from '../../components/common/sideNav'
-import IAzureArticleData from '../../../common/interfaces/IAzureArticleData'
 import IUser from '../../interfaces/IUser'
-import { getAzureData } from '../../lib/azure'
+import { azureDataRoute, getAzureData } from '../../lib/azure'
 import { getUser } from '../../lib/devto'
 import IArticleWithDiffs from '../../interfaces/IArticleWithDiffs'
 import { addDiffsToArticle } from '../../lib/utils/articles'
@@ -16,16 +16,22 @@ import DailyViewSplitGraph from '../../components/graphs/dailyViewSplitGraph'
 import Select from '../../components/common/select'
 import { getPageLinks, changePage } from '../../lib/navigation'
 import { useRouter } from 'next/router'
+import IAzureData from '../../../common/interfaces/IAzureData'
+import fetcher from '../../lib/utils/fetcher'
 
 // Add .fromNow (relative times)
 dayjs.extend(relativeTime)
 
 interface IProps {
-    azureArticleData: IAzureArticleData
+    azureData: IAzureData
     user: IUser
 }
 
-const BreakdownGraphPage = ({ azureArticleData, user }: IProps): ReactNode => {
+const BreakdownGraphPage = ({ azureData, user }: IProps): ReactNode => {
+    const { data } = useSWR<IAzureData, Error>(azureDataRoute, fetcher)
+
+    const azureArticleData = data ? data.articles : azureData.articles
+
     const router = useRouter()
     const pageLinks = getPageLinks(azureArticleData.articles.length)
     const articlesWithDiffs: IArticleWithDiffs[] = addDiffsToArticle(azureArticleData.articles)
@@ -59,7 +65,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
     return {
         props: {
-            azureArticleData: azureData.articles,
+            azureData,
             user,
         },
         revalidate: 60, // In seconds

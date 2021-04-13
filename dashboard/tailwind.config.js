@@ -33,6 +33,7 @@ module.exports = {
                 'indicator-text': '#363d44',
                 'indicator-background': '#d2d6db',
                 'base-border': '#eef0f1',
+                'footer-bg': '#d2d6db',
             },
             boxShadow: {
                 card: '0 0 0 1px rgba(8, 9, 10, 0.05)',

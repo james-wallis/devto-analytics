@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react'
 import Head from 'next/head'
 import Header from './header'
 import IUser from '../../interfaces/IUser'
+import Footer from './footer'
 
 interface IProps {
     children?: ReactNode
@@ -18,7 +19,7 @@ const Layout = ({ children, title = 'This is the default title', user }: IProps)
         </Head>
         <Header user={user} />
         <main className="max-w-site m-auto">{children}</main>
-        <footer className="h-10 flex items-end justify-center mb-6"></footer>
+        <Footer />
     </div>
 )
 

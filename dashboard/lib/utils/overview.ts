@@ -76,7 +76,7 @@ export const getOverviewStats = (
                 },
                 {
                     text: 'Current streak',
-                    value: `${writingStreak.latestStreakCount} posts`,
+                    value: `${writingStreak.latestStreakCount} weeks`,
                     small: true,
                 },
             ],

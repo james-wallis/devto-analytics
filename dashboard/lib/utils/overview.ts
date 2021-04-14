@@ -3,21 +3,16 @@ import IAzureArticleData from '../../../common/interfaces/IAzureArticleData'
 import IAzureFollowerData from '../../../common/interfaces/IAzureFollowerData'
 import IArticle from '../../../common/interfaces/IArticle'
 import IOverviewStats from '../../interfaces/IOverviewStats'
-import { isArticlePublishedSince } from './articles'
+import IWritingStreak from '../../interfaces/IWritingStreak'
 
 export const getOverviewStats = (
     latestArticle: IArticle,
     azureArticleData: IAzureArticleData,
     azureFollowerData: IAzureFollowerData,
-    numArticlesPublished: number
+    numArticlesPublished: number,
+    writingStreak: IWritingStreak
 ): IOverviewStats[] => {
-    const { combined: combinedArticleStats, articles } = azureArticleData
-
-    const numArticlesPublishedInLastMonth: number = articles.reduce(
-        (count: number, { published, publishedAt }) =>
-            isArticlePublishedSince('month', published, publishedAt) ? count + 1 : count,
-        0
-    )
+    const { combined: combinedArticleStats } = azureArticleData
 
     const overviewStats: IOverviewStats[] = [
         {
@@ -80,8 +75,9 @@ export const getOverviewStats = (
                     small: true,
                 },
                 {
-                    text: 'Last 30 days',
-                    value: `${numArticlesPublishedInLastMonth}`,
+                    text: 'Current streak',
+                    value: `${writingStreak.latestStreakCount} posts`,
+                    small: true,
                 },
             ],
         },

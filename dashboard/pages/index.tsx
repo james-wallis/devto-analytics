@@ -28,6 +28,8 @@ import { sortArticlesWithDiff } from '../lib/utils/sorting'
 import { DiffTypes } from '../types'
 import IAzureData from '../../common/interfaces/IAzureData'
 import fetcher from '../lib/utils/fetcher'
+import IWritingStreak from '../interfaces/IWritingStreak'
+import axios from 'axios'
 
 // Add .fromNow (relative times)
 dayjs.extend(relativeTime)
@@ -35,7 +37,11 @@ dayjs.extend(relativeTime)
 interface IProps {
     azureData: IAzureData
     user: IUser
+    initialWritingStreakData: IWritingStreak
 }
+
+const writingStreakUrl =
+    'https://devto-writing-streak-calculator.wallis.dev/api/calculate?username=jameswallis'
 
 const articleSelectOpts: ISelectOption[] = [
     { text: 'Recently published', value: 'published-desc' },
@@ -51,8 +57,9 @@ const diffSelectionOpts: ISelectOption[] = [
     { text: 'Past month', value: 'month' as DiffTypes },
 ]
 
-const IndexPage = ({ azureData, user }: IProps): ReactNode => {
+const IndexPage = ({ azureData, user, initialWritingStreakData }: IProps): ReactNode => {
     const { data } = useSWR<IAzureData, Error>('/api/azure/data', fetcher)
+    const { data: writingStreakData } = useSWR<IWritingStreak, Error>(writingStreakUrl, fetcher)
 
     const azureArticleData = data ? data.articles : azureData.articles
     const azureFollowerData = data ? data.followers : azureData.followers
@@ -70,7 +77,8 @@ const IndexPage = ({ azureData, user }: IProps): ReactNode => {
         latestArticle,
         azureArticleData,
         azureFollowerData,
-        publishedArticles.length
+        publishedArticles.length,
+        writingStreakData || initialWritingStreakData
     )
 
     const sortedArticles: IArticleWithDiffs[] = sortArticlesWithDiff(
@@ -150,12 +158,17 @@ const IndexPage = ({ azureData, user }: IProps): ReactNode => {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-    const [azureData, user] = await Promise.all([getAzureData(), getUser()])
+    const [azureData, user, { data: initialWritingStreakData }] = await Promise.all([
+        getAzureData(),
+        getUser(),
+        axios.get(writingStreakUrl),
+    ])
 
     return {
         props: {
             azureData,
             user,
+            initialWritingStreakData,
         },
         revalidate: 60, // In seconds
     }

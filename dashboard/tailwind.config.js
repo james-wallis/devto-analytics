@@ -38,6 +38,7 @@ module.exports = {
             boxShadow: {
                 card: '0 0 0 1px rgba(8, 9, 10, 0.05)',
                 'form-hover': '1px 1px #3b49df',
+                header: '0 1px 1px rgba(0, 0, 0, 0.1)',
             },
             borderRadius: {
                 devto: '5px',

@@ -7,7 +7,7 @@ interface IProps {
 }
 
 const Header = ({ user }: IProps): JSX.Element => (
-    <header className="w-screen bg-white h-header shadow-sm">
+    <header className="w-screen bg-white h-header shadow-header">
         <div className="max-w-site m-auto px-2 lg:px-4 h-full flex flex-row items-center justify-between">
             <Link href="/">
                 <a className="flex items-center">
